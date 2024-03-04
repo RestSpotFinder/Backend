@@ -29,12 +29,12 @@ public class RouteController extends CommonController {
     private final NaverGeoService naverGeoService;
 
     // 경로 조회 API
-    @Operation(summary = "경로 조회 API")
+    @Operation(summary = "경로 조회 API", description = "경유지[waypoints] 는 최대 5개 구분자는 <b>%7c</b> 를 사용한다. <br> <b>Ex) 127.1464289,36.8102415%7C127.3923500,36.6470900 </b>")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RouteResponse.class)))})
     @GetMapping
-    public ResponseEntity<?> getRoute(@RequestParam String start, @RequestParam String goal) {
+    public ResponseEntity<?> getRoute(@RequestParam String start, @RequestParam String goal, @RequestParam(required = false) String waypoints) {
         // NAVER 에서 경로 데이터 조회
-        Map<RouteOption, Coordinate[]> naverRouteData = naverGeoService.getRouteData(start, goal);
+        Map<RouteOption, Coordinate[]> naverRouteData = naverGeoService.getRouteData(start, goal, waypoints);
         List<RouteResponse> responseList = naverRouteData.entrySet().stream()
                 .map(entry -> RouteResponse.from(entry.getValue(), entry.getKey()))
                 .toList();

@@ -32,9 +32,13 @@ public class NaverGeoService {
     @Value("${naver.cloud-platform.client-secret}")
     String CLIENT_SECRET;
 
-    public Map<RouteOption, Coordinate[]> getRouteData(String start, String goal) {
-        List<String> optionList = List.of(RouteOption.optimal.getValue(), RouteOption.fast.getValue(), RouteOption.avoidtoll.getValue());
-        String requestURL = DIRECT5_URL + "?start=" + start + "&goal=" + goal + "&option=" + String.join(":", optionList);
+    public Map<RouteOption, Coordinate[]> getRouteData(String start, String goal, String waypoints) {
+        String requestURL = DIRECT5_URL +
+                "?start=" + start +
+                "&goal=" + goal +
+                "&waypoints=" + waypoints +
+                "&option=" + RouteOption.getCombinedValues();
+        System.out.println("requestURL = " + requestURL);
         JsonNode jsonNode = connect(requestURL);
 //        System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode));
 
@@ -42,7 +46,7 @@ public class NaverGeoService {
         return Map.of(
                 RouteOption.fast, extractRoute(jsonNode, RouteOption.fast),
                 RouteOption.optimal, extractRoute(jsonNode, RouteOption.optimal),
-                RouteOption.avoidtoll, extractRoute(jsonNode, RouteOption.avoidtoll));
+                RouteOption.comfort, extractRoute(jsonNode, RouteOption.comfort));
     }
 
     private Coordinate[] extractRoute(JsonNode jsonNode, RouteOption routeOption) {
