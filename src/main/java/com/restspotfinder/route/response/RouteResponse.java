@@ -1,5 +1,6 @@
 package com.restspotfinder.route.response;
 
+import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.domain.RouteOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -7,7 +8,6 @@ import lombok.Getter;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -17,23 +17,36 @@ public class RouteResponse {
     private Long routeId;
     @Schema(description = "경로 탐색 옵션", enumAsRef = true)
     private RouteOption routeOption;
+    @Schema(description = "경로 탐색 옵션 문구")
+    private String optionText;
+    @Schema(description = "총 거리 [단위: meter]")
+    private String distance;
+    @Schema(description = "예상 시간 [단위: ms]")
+    private String duration;
+    @Schema(description = "통행료 [단위: 원]")
+    private String tollFare; // 통행료
+    @Schema(description = "연료비 [단위: 원]")
+    private String fuelPrice; // 연료비
     @Schema(description = "경로 조회 날짜")
     private LocalDateTime createdDate;
-    @Schema(description = "경로 Path", example = "[[37.4321376, 127.128494],[37.4322478, 127.1288664]]")
-    private List<Double[]> coordinates;
+    @Schema(description = "경로 Path")
+    private Coordinate[] coordinates;
 
-    public static RouteResponse from(Coordinate[] coordinates, RouteOption routeOption) {
+    public static RouteResponse from(Route route) {
         return RouteResponse.builder()
-                .routeOption(routeOption)
-                .createdDate(LocalDateTime.now())
-                .coordinates(toArray(coordinates))
+                .routeId(route.getRouteId())
+                .distance(route.getDistance())
+                .duration(route.getDuration())
+                .tollFare(route.getTollFare())
+                .fuelPrice(route.getFuelPrice())
+                .routeOption(route.getRouteOption())
+                .optionText(route.getRouteOption().getDesc())
+                .createdDate(route.getCreatedDate())
+                .coordinates(route.getLineString().getCoordinates())
                 .build();
     }
 
-    // [37.4321376, 127.128494] 형식으로 변환
-    public static List<Double[]> toArray(Coordinate[] coordinates) {
-        return Arrays.stream(coordinates)
-                .map(coordinate -> new Double[]{coordinate.getY(), coordinate.getX()})
-                .toList();
+    public static List<RouteResponse> fromList(List<Route> routeList){
+        return routeList.stream().map(RouteResponse::from).toList();
     }
 }
