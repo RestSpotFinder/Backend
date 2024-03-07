@@ -40,8 +40,6 @@ public class RouteController extends CommonController {
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints);
         List<Route> routeList = routeService.create(naverRouteList);
 
-        // 비동기 실행
-        routeAsyncService.insertBatchRoutePoints(routeList);
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
 }
