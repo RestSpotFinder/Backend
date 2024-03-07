@@ -3,9 +3,9 @@ package com.restspotfinder.route.service;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.repository.RouteRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

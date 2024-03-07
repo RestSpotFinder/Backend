@@ -1,8 +1,9 @@
 package com.restspotfinder.route.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Schema(enumAsRef = true, description = """
@@ -16,9 +17,9 @@ import lombok.Getter;
 public enum RouteOption {
     fast("trafast", "실시간 빠른길"),
     optimal("traoptimal", "실시간 최적"),
-    comfort("tracomfort", "실시간 편한길");
-//    avoidtoll("traavoidtoll", "무료 우선"),
-//    avoidcaronly("traavoidcaronly", "자동차 전용 도로 회피 우선");
+    comfort("tracomfort", "실시간 편한길"),
+    avoidtoll("traavoidtoll", "무료 우선"),
+    avoidcaronly("traavoidcaronly", "자동차 전용 도로 회피 우선");
 
     private final String value;
     private final String desc;
@@ -28,13 +29,13 @@ public enum RouteOption {
         this.desc = desc;
     }
 
-    public static String getCombinedValues(){
-        return fast.getValue() + ":" + optimal.getValue() + ":" + comfort.getValue();
+    public static String getOptionValues(int page) {
+        return (page == 1) ? fast.getValue() + ":" + optimal.getValue() + ":" + comfort.getValue()
+                : avoidtoll.getValue() + ":" + avoidcaronly.getValue();
     }
 
-    // @RequestParam ENUM Parsing
-    @JsonCreator
-    public static RouteOption from(String s) {
-        return RouteOption.valueOf(s);
+    public static List<RouteOption> getOptionList(int page) {
+        return (page == 1) ? List.of(fast, optimal, comfort)
+                : List.of(avoidtoll, avoidcaronly);
     }
 }
