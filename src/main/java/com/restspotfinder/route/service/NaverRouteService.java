@@ -29,9 +29,9 @@ public class NaverRouteService {
     @Value("${naver.cloud-platform.client-secret}")
     String CLIENT_SECRET;
 
-    public List<NaverRoute> getRouteData(String start, String goal, String waypoints) {
-        String requestURL = DIRECT5_URL + "?start=" + start + "&goal=" + goal + "&waypoints=" + waypoints + "&option" + "=" + RouteOption.getCombinedValues();
-        return NaverRoute.fromArray(connect(requestURL), RouteOption.values());
+    public List<NaverRoute> getRouteData(String start, String goal, String waypoints, int page) {
+        String requestURL = DIRECT5_URL + "?start=" + start + "&goal=" + goal + "&waypoints=" + waypoints + "&option=" + RouteOption.getOptionValues(page);
+        return NaverRoute.fromList(connect(requestURL), RouteOption.getOptionList(page));
     }
 
     public JsonNode connect(String requestURL) {

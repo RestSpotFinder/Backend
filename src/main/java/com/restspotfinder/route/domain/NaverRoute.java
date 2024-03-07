@@ -8,7 +8,6 @@ import lombok.Getter;
 import org.locationtech.jts.geom.Coordinate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -34,8 +33,8 @@ public class NaverRoute {
                 .build();
     }
 
-    public static List<NaverRoute> fromArray(JsonNode jsonNode, RouteOption[] optionArray) {
-        return Arrays.stream(optionArray).map(option -> NaverRoute.from(jsonNode, option)).toList();
+    public static List<NaverRoute> fromList(JsonNode jsonNode, List<RouteOption> optionList) {
+        return optionList.stream().map(option -> NaverRoute.from(jsonNode, option)).toList();
     }
 
     public static String extractText(JsonNode node, RouteOption option, String term){
