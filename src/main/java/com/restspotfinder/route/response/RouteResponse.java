@@ -13,6 +13,8 @@ import java.util.List;
 @Getter
 @Builder
 public class RouteResponse {
+    @Schema(description = "검색 고유 ID")
+    private Long searchId;
     @Schema(description = "경로 고유 ID")
     private Long routeId;
     @Schema(description = "경로 탐색 옵션", enumAsRef = true)
@@ -35,6 +37,7 @@ public class RouteResponse {
     public static RouteResponse from(Route route) {
         return RouteResponse.builder()
                 .routeId(route.getRouteId())
+                .searchId(route.getSearchId())
                 .distance(route.getDistance())
                 .duration(route.getDuration())
                 .tollFare(route.getTollFare())

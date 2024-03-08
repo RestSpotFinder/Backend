@@ -18,6 +18,7 @@ public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long routeId;
+    private Long searchId;
     private String distance; // 거리 (meters)
     private String duration; // 시간 (millisecond)
     private String tollFare; // 통행료
@@ -28,8 +29,9 @@ public class Route {
     private LineString lineString; // 경로 Path
     private LocalDateTime createdDate;
 
-    public static Route from(NaverRoute naverRoute) {
+    public static Route from(NaverRoute naverRoute, long searchId) {
         return Route.builder()
+                .searchId(searchId)
                 .distance(naverRoute.getDistance())
                 .duration(naverRoute.getDuration())
                 .tollFare(naverRoute.getTollFare())
@@ -40,7 +42,7 @@ public class Route {
                 .build();
     }
 
-    public static List<Route> fromList(List<NaverRoute> naverRouteList) {
-        return naverRouteList.stream().map(Route::from).toList();
+    public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId) {
+        return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId)).toList();
     }
 }

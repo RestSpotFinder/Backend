@@ -6,6 +6,9 @@ import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.response.RouteResponse;
 import com.restspotfinder.route.service.NaverRouteService;
 import com.restspotfinder.route.service.RouteService;
+import com.restspotfinder.search.domain.Search;
+import com.restspotfinder.search.domain.SearchType;
+import com.restspotfinder.search.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +30,7 @@ import java.util.List;
 @RequestMapping("/api/route")
 public class RouteController extends CommonController {
     private final RouteService routeService;
+    private final SearchService searchService;
     private final NaverRouteService naverRouteService;
 
     @Operation(summary = "경로 조회 API", description = "경유지[waypoints] 는 최대 5개 구분자는 <b>%7c</b> 를 사용한다. " +
@@ -41,7 +45,8 @@ public class RouteController extends CommonController {
                                              @RequestParam(defaultValue = "1") int page,
                                              @RequestParam(required = false) String waypoints) {
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints, page);
-        List<Route> routeList = routeService.create(naverRouteList);
+        Search search = searchService.create(SearchType.route);
+        List<Route> routeList = routeService.create(naverRouteList, search.getSearchId());
 
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
