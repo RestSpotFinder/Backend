@@ -31,7 +31,7 @@ public class PlaceController extends CommonController {
     private final SearchService searchService;
     private final NaverPlaceService naverPlaceSearchService;
 
-    @Operation(summary = "NAVER 장소 검색 API")
+    @Operation(summary = "NAVER 장소 검색 API", description = "<br> <br> 일일 API 호출 제한량은 25,000 건이다. <b>25,000 건 초과 시 303 에러(API_CALL_LIMIT_ERROR)가 발생 한다.</b>")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver")
     public ResponseEntity<?> getPlacesBySearchTerm(@RequestParam String searchTerm) {
