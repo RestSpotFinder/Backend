@@ -4,6 +4,8 @@ import com.restspotfinder.common.CommonController;
 import com.restspotfinder.place.domain.NaverPlace;
 import com.restspotfinder.place.response.PlaceResponse;
 import com.restspotfinder.place.service.NaverPlaceService;
+import com.restspotfinder.search.domain.SearchType;
+import com.restspotfinder.search.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,12 +26,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/place")
 public class PlaceController extends CommonController {
+    private final SearchService searchService;
     private final NaverPlaceService naverPlaceSearchService;
 
     @Operation(summary = "NAVER 장소 검색 API")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver")
     public ResponseEntity<?> getPlacesBySearchTerm(@RequestParam String searchTerm) {
+        searchService.create(SearchType.place);
         List<NaverPlace> naverPlaceList = naverPlaceSearchService.getPlaceListBySearchTerm(searchTerm);
         return SuccessReturn(PlaceResponse.fromList(naverPlaceList));
     }

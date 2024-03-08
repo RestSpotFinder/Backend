@@ -15,7 +15,7 @@ public class RouteService {
     private final RouteRepository routeRepository;
 
     @Transactional
-    public List<Route> create(List<NaverRoute> naverRouteList) {
-        return routeRepository.saveAll(Route.fromList(naverRouteList));
+    public List<Route> create(List<NaverRoute> naverRouteList, long searchId) {
+        return routeRepository.saveAll(Route.fromList(naverRouteList, searchId));
     }
 }
