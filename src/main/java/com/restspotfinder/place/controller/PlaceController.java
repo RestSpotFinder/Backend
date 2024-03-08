@@ -1,6 +1,7 @@
 package com.restspotfinder.place.controller;
 
 import com.restspotfinder.common.CommonController;
+import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.place.domain.NaverPlace;
 import com.restspotfinder.place.response.PlaceResponse;
 import com.restspotfinder.place.service.NaverPlaceService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "장소[Place] API")
@@ -33,6 +35,10 @@ public class PlaceController extends CommonController {
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver")
     public ResponseEntity<?> getPlacesBySearchTerm(@RequestParam String searchTerm) {
+        int apiCallCount = searchService.countForPlace(LocalDate.now());
+        if (apiCallCount >= 25000) // 일일 한도 25,000 건
+            return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
+
         searchService.create(SearchType.place);
         List<NaverPlace> naverPlaceList = naverPlaceSearchService.getPlaceListBySearchTerm(searchTerm);
         return SuccessReturn(PlaceResponse.fromList(naverPlaceList));
