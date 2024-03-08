@@ -1,6 +1,7 @@
 package com.restspotfinder.route.controller;
 
 import com.restspotfinder.common.CommonController;
+import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.response.RouteResponse;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "경로[Route] API")
@@ -33,10 +35,11 @@ public class RouteController extends CommonController {
     private final SearchService searchService;
     private final NaverRouteService naverRouteService;
 
-    @Operation(summary = "경로 조회 API", description = "경유지[waypoints] 는 최대 5개 구분자는 <b>%7c</b> 를 사용한다. " +
+    @Operation(summary = "경로 조회 API", description = "경유지(waypoints)는 최대 5개까지 이며, 구분자로 %7c를 사용 한다. " +
             "<br> <b>Ex) 127.1464289,36.8102415%7C127.3923500,36.6470900 </b> " +
-            "<br> <br>page 는 1 or 2를 사용 한다. " +
-            "<br> <b>Ex) 1일 경우 [fast, optimal, comfort] 2일 경우 [avoidtoll, avoidcaronly] 타입을 반환 한다.</b>")
+            "<br> <br> page 는 1 or 2를 사용 한다. " +
+            "<br> <b>Ex) 1일 경우 [fast, optimal, comfort] 2일 경우 [avoidtoll, avoidcaronly] 타입을 반환 한다.</b>" +
+            "<br> <br> 월간 API 호출 제한량은 60,000 건이다. <b>60,000 건 초과 시 303 에러(API_CALL_LIMIT_ERROR)가 발생 한다.</b>")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array =
     @ArraySchema(schema = @Schema(implementation = RouteResponse.class)))})
     @GetMapping
@@ -44,6 +47,10 @@ public class RouteController extends CommonController {
                                              @RequestParam String goal,
                                              @RequestParam(defaultValue = "1") int page,
                                              @RequestParam(required = false) String waypoints) {
+        int apiCallCount = searchService.countForRouteInMonth(LocalDate.now());
+        if (apiCallCount >= 60000) // 월간 한도 60,000 건
+            return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
+
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints, page);
         Search search = searchService.create(SearchType.route);
         List<Route> routeList = routeService.create(naverRouteList, search.getSearchId());

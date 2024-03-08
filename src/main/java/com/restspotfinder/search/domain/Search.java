@@ -20,12 +20,12 @@ public class Search {
     private long searchId;
     @Enumerated(EnumType.STRING)
     private SearchType type; // ex) place, route
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdAt;
 
     public static Search from(SearchType searchType){
         return Search.builder()
                 .type(searchType)
-                .localDateTime(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
