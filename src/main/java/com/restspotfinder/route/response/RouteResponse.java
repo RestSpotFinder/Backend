@@ -5,7 +5,6 @@ import com.restspotfinder.route.domain.RouteOption;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
-import org.locationtech.jts.geom.Coordinate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +31,7 @@ public class RouteResponse {
     @Schema(description = "경로 조회 날짜")
     private LocalDateTime createdDate;
     @Schema(description = "경로 Path")
-    private Coordinate[] coordinates;
+    private List<CoordinateResponse> coordinates;
 
     public static RouteResponse from(Route route) {
         return RouteResponse.builder()
@@ -45,7 +44,7 @@ public class RouteResponse {
                 .routeOption(route.getRouteOption())
                 .optionText(route.getRouteOption().getDesc())
                 .createdDate(route.getCreatedDate())
-                .coordinates(route.getLineString().getCoordinates())
+                .coordinates(CoordinateResponse.fromArray(route.getLineString().getCoordinates()))
                 .build();
     }
 

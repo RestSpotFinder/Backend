@@ -19,9 +19,9 @@ public class RestAreaResponse {
     @Schema(description = "방향", example = "상행, 하행, 양방향")
     private String routeDirection;
     @Schema(description = "위도")
-    private double latitude;
+    private double lat;
     @Schema(description = "경도")
-    private double longitude;
+    private double lng;
     @Schema(description = "휴게소 종류")
     private String type;
     @Schema(description = "휴게소 운영 시작 시각")
@@ -61,8 +61,8 @@ public class RestAreaResponse {
                 .name(restArea.getName())
                 .routeName(restArea.getRouteName())
                 .routeDirection(restArea.getRouteDirection())
-                .latitude(restArea.getLatitude())
-                .longitude(restArea.getLongitude())
+                .lat(restArea.getLatitude())
+                .lng(restArea.getLongitude())
                 .type(restArea.getType())
                 .operatingStartTime(restArea.getOperatingStartTime())
                 .operatingEndTime(restArea.getOperatingEndTime())
