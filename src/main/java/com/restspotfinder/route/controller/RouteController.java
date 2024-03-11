@@ -53,7 +53,7 @@ public class RouteController extends CommonController {
 
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints, page);
         Search search = searchService.create(SearchType.route);
-        List<Route> routeList = routeService.create(naverRouteList, search.getSearchId());
+        List<Route> routeList = routeService.create(naverRouteList, search.getSearchId(), start, goal, waypoints);
 
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
