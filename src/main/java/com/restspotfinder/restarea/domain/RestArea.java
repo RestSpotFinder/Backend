@@ -8,6 +8,10 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Entity
 @Getter
@@ -51,6 +55,9 @@ public class RestArea {
     private String providerCode; // "제공기관코드"
     private String providerName; // "제공기관명"
 
+    @Setter
+    private Integer weight; // 방향 판단 가중치
+
     public static RestArea from(JsonNode node) {
         GeometryFactory geometryFactory = new GeometryFactory();
         double xValue = node.get("경도").asDouble(0);
@@ -89,6 +96,10 @@ public class RestArea {
                 .providerCode(node.get("제공기관코드").asText(""))
                 .providerName(node.get("제공기관명").asText(""))
                 .build();
+    }
+
+    public static Map<String, List<RestArea>> listToGroupingMap(List<RestArea> restAreaList) {
+        return restAreaList.stream().collect(Collectors.groupingBy(RestArea::getRouteName));
     }
 
     //            {
