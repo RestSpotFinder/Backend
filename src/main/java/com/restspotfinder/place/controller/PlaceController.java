@@ -5,7 +5,6 @@ import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.place.domain.NaverPlace;
 import com.restspotfinder.place.response.PlaceResponse;
 import com.restspotfinder.place.service.NaverPlaceService;
-import com.restspotfinder.search.domain.SearchType;
 import com.restspotfinder.search.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,7 +38,6 @@ public class PlaceController extends CommonController {
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
             return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
 
-        searchService.create(SearchType.place);
         List<NaverPlace> naverPlaceList = naverPlaceSearchService.getPlaceListBySearchTerm(searchTerm);
         return SuccessReturn(PlaceResponse.fromList(naverPlaceList));
     }
