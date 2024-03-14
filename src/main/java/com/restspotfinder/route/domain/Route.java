@@ -2,8 +2,10 @@ package com.restspotfinder.route.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,8 +31,16 @@ public class Route {
     private LineString lineString; // 경로 Path
     private LocalDateTime createdDate;
 
-    public static Route from(NaverRoute naverRoute, long searchId) {
-        return Route.builder()
+    private Point start; // 출발지
+    private Point goal; // 목적지
+    private Point waypoint1; // 경유지 1
+    private Point waypoint2; // 경유지 2
+    private Point waypoint3; // 경유지 3
+    private Point waypoint4; // 경유지 4
+    private Point waypoint5; // 경유지 5
+
+    public static Route from(NaverRoute naverRoute, long searchId, String start, String goal, String waypoints) {
+        Route.RouteBuilder builder = Route.builder()
                 .searchId(searchId)
                 .distance(naverRoute.getDistance())
                 .duration(naverRoute.getDuration())
@@ -39,10 +49,36 @@ public class Route {
                 .lineString(new GeometryFactory().createLineString(naverRoute.getPath()))
                 .routeOption(naverRoute.getOption())
                 .createdDate(LocalDateTime.now())
-                .build();
+                .start(convertStringToPoint(start))
+                .goal(convertStringToPoint(goal));
+
+        if (waypoints == null || waypoints.isBlank())
+            return builder.build();
+
+        String[] waypointArr = waypoints.split("\\|");
+        for (int i = 0; i < waypointArr.length; i++) {
+            Point waypoint = convertStringToPoint(waypointArr[i]);
+            switch (i) {
+                case 0: builder.waypoint1(waypoint); break;
+                case 1: builder.waypoint2(waypoint); break;
+                case 2: builder.waypoint3(waypoint); break;
+                case 3: builder.waypoint4(waypoint); break;
+                case 4: builder.waypoint5(waypoint); break;
+            }
+        }
+
+        return builder.build();
+    }
+    public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId, String start, String goal, String waypoints) {
+        return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId, start, goal, waypoints)).toList();
     }
 
-    public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId) {
-        return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId)).toList();
+    public static Point convertStringToPoint(String location) {
+        String[] locationArr = location.split(",");
+        double longitude = Double.parseDouble(locationArr[0]);
+        double latitude = Double.parseDouble(locationArr[1]);
+
+        Coordinate coordinate = new Coordinate(longitude, latitude);
+        return new GeometryFactory().createPoint(coordinate);
     }
 }

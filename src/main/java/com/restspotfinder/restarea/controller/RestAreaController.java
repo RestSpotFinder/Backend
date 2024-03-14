@@ -1,6 +1,7 @@
 package com.restspotfinder.restarea.controller;
 
 import com.restspotfinder.common.CommonController;
+import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.response.RestAreaResponse;
 import com.restspotfinder.restarea.service.RestAreaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @Tag(name = "휴게소[RestArea] API")
@@ -37,6 +40,9 @@ public class RestAreaController extends CommonController {
     @ArraySchema(schema = @Schema(implementation = RestAreaResponse.class)))})
     @GetMapping("/route")
     public ResponseEntity<?> getOneByRouteId(@RequestParam long routeId) {
-        return SuccessReturn(RestAreaResponse.fromList(restAreaService.getListNearbyRoutes(routeId)));
+        List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(routeId);
+        List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(restAreaList);
+
+        return SuccessReturn(RestAreaResponse.fromList(filteredRestAreaList));
     }
 }
