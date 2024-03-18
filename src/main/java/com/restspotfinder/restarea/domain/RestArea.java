@@ -57,6 +57,7 @@ public class RestArea {
 
     @Setter
     private Integer weight; // 방향 판단 가중치
+    private String naverMapUrl; // 매칭되는 네이버 맵 페이지 URL
 
     public static RestArea from(JsonNode node) {
         GeometryFactory geometryFactory = new GeometryFactory();

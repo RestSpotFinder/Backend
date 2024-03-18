@@ -54,6 +54,9 @@ public class RestAreaResponse {
     private String representativeFood;
     @Schema(description = "휴게소 전화 번호")
     private String phoneNumber;
+    @Schema(description = "매칭되는 NAVER MAP URL")
+    private String naverMapUrl;
+
 
     public static RestAreaResponse from(RestArea restArea) {
         return RestAreaResponse.builder()
@@ -79,6 +82,7 @@ public class RestAreaResponse {
                 .otherFacilities(restArea.getOtherFacilities())
                 .representativeFood(restArea.getRepresentativeFood())
                 .phoneNumber(restArea.getPhoneNumber())
+                .naverMapUrl(restArea.getNaverMapUrl())
                 .build();
     }
 
