@@ -1,7 +1,7 @@
 package com.restspotfinder.common.quartz.job;
 
-import com.restspotfinder.apicount.domain.PlaceSearchCount;
-import com.restspotfinder.apicount.repository.PlaceSearchCountRepository;
+import com.restspotfinder.apicount.domain.RouteSearchCount;
+import com.restspotfinder.apicount.repository.RouteSearchCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -12,11 +12,11 @@ import java.time.LocalDate;
 @Slf4j
 @RequiredArgsConstructor
 public class RouteSearchCountCreateJob extends QuartzJobBean {
-    private final PlaceSearchCountRepository placeSearchCountRepository;
+    private final RouteSearchCountRepository routeSearchCountRepository;
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
-        placeSearchCountRepository.save(PlaceSearchCount.init(tomorrow));
+        routeSearchCountRepository.save(RouteSearchCount.init(tomorrow));
     }
 }
