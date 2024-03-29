@@ -1,11 +1,11 @@
 package com.restspotfinder.place.controller;
 
+import com.restspotfinder.apicount.service.CountService;
 import com.restspotfinder.common.CommonController;
 import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.place.domain.NaverPlace;
 import com.restspotfinder.place.response.PlaceResponse;
 import com.restspotfinder.place.service.NaverPlaceService;
-import com.restspotfinder.search.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,14 +27,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/place")
 public class PlaceController extends CommonController {
-    private final SearchService searchService;
+    private final CountService countService;
     private final NaverPlaceService naverPlaceSearchService;
 
     @Operation(summary = "NAVER 장소 검색 API", description = "일일 API 호출 제한량은 25,000 건이다. <b>25,000 건 초과 시 303 에러(API_CALL_LIMIT_ERROR)가 발생 한다.</b>")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver")
     public ResponseEntity<?> getPlacesBySearchTerm(@RequestParam String searchTerm) {
-        int apiCallCount = searchService.countForPlace(LocalDate.now());
+        int apiCallCount = countService.increasePlaceSearchCount(LocalDate.now());
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
             return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
 
