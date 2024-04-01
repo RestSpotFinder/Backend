@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.restspotfinder.place.domain.NaverPlace;
-import com.restspotfinder.search.domain.SearchType;
-import com.restspotfinder.search.service.SearchService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,8 +20,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class NaverPlaceService {
-    private final SearchService searchService;
-
     @Value("${naver.developers.search-url}")
     String SEARCH_URL;
     @Value("${naver.developers.client-id}")
@@ -34,7 +30,6 @@ public class NaverPlaceService {
     // 일일 허용량 25,000 건
     @Transactional
     public List<NaverPlace> getPlaceListBySearchTerm(String searchTerm) {
-        searchService.create(SearchType.place);
         String requestURL = SEARCH_URL + "?display=5&query=" + searchTerm;
         JsonNode jsonNode = connect(requestURL);
 

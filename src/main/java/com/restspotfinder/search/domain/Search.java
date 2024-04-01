@@ -20,11 +20,13 @@ public class Search {
     private long searchId;
     @Enumerated(EnumType.STRING)
     private SearchType type; // ex) place, route
+    private Boolean isTest;
     private LocalDateTime createdAt;
 
-    public static Search from(SearchType searchType){
+    public static Search from(SearchType searchType, Boolean isTest){
         return Search.builder()
                 .type(searchType)
+                .isTest(isTest)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

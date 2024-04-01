@@ -14,8 +14,8 @@ import java.time.YearMonth;
 public class SearchService {
     private final SearchRepository searchRepository;
 
-    public Search create(SearchType searchType) {
-        return searchRepository.save(Search.from(searchType));
+    public Search create(SearchType searchType, Boolean isTest) {
+        return searchRepository.save(Search.from(searchType, isTest));
     }
 
     // 일일 호출량 계산
@@ -31,5 +31,4 @@ public class SearchService {
 
         return searchRepository.countForRouteInMonth(firstDayOfMonth, lastDayOfMonth);
     }
-
 }
