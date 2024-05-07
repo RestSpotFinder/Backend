@@ -99,7 +99,7 @@ public class RestArea {
                 .build();
     }
 
-    public static Map<String, List<RestArea>> listToGroupingMap(List<RestArea> restAreaList) {
+    public static Map<String, List<RestArea>> listToGroupingRouteNameMap(List<RestArea> restAreaList) {
         return restAreaList.stream().collect(Collectors.groupingBy(RestArea::getRouteName));
     }
 

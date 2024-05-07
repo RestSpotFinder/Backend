@@ -27,7 +27,7 @@ public class RestAreaService {
     }
 
     public List<RestArea> filterAccessibleRestAreas(List<RestArea> initList){
-        Map<String, List<RestArea>> groupingMap = RestArea.listToGroupingMap(initList);
+        Map<String, List<RestArea>> groupingMap = RestArea.listToGroupingRouteNameMap(initList);
         Map<String, String> directionMap = groupingMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> getRouteDirection(entry.getValue())));
 
