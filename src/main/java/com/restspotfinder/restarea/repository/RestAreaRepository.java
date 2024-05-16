@@ -33,10 +33,12 @@ public interface RestAreaRepository extends JpaRepository<RestArea, Long> {
             ") filtered_route ON ST_DWithin( " +
             "    CAST(ST_SetSRID(filtered_route.line_string, 4326) AS geography), " +
             "    CAST(ST_SetSRID(r.point, 4326) AS geography), " +
-            "    500) " +
+            "    300) " +
             "ORDER BY ST_Distance( " +
             "    CAST(ST_SetSRID(r.point, 4326) AS geography), " +
             "    CAST(ST_SetSRID(ST_StartPoint(filtered_route.line_string), 4326) AS geography)) ASC",
             nativeQuery = true)
     List<RestArea> findNearbyRoutes(@Param("routeId") long routeId);
+
+    List<RestArea> findByRouteName(String routeName);
 }
