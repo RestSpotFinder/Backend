@@ -1,8 +1,6 @@
 package com.restspotfinder.apicount.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +16,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RouteSearchCount {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long countId;
-    private int naverCount;
+    @Id
     private LocalDate createdAt;
+    private int naverCount;
 
     public static RouteSearchCount init(LocalDate date){
         return RouteSearchCount.builder()
