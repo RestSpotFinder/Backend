@@ -41,7 +41,7 @@ public class RestAreaController extends CommonController {
     @GetMapping("/route")
     public ResponseEntity<?> getOneByRouteId(@RequestParam long routeId) {
         List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(routeId);
-        List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(restAreaList);
+        List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(routeId, restAreaList);
 
         return SuccessReturn(RestAreaResponse.fromList(filteredRestAreaList));
     }
