@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class RestArea {
@@ -28,14 +29,11 @@ public class RestArea {
     @JsonIgnore
     @Column(columnDefinition = "geometry(Point, 4326)")
     private Point point;
-    private String roadType; // "도로종류"
-    private String roadNumber; // "도로노선번호"
     private double latitude; // "위도"
     private double longitude; // "경도"
     private String type; // "휴게소종류"
     private String operatingStartTime; // "휴게소운영시작시각"
     private String operatingEndTime; // "휴게소운영종료시각"
-    private int siteArea; // "도로점용면적"
     private int parkingSpaceCount; // "주차면수"
     private Boolean isMaintenanceAvailable; // "경정비가능여부"
     private Boolean hasGasStation; // "주유소유무"
@@ -51,9 +49,6 @@ public class RestArea {
     private String otherFacilities; // "기타편의시설"
     private String representativeFood; // "휴게소대표음식명"
     private String phoneNumber; // "휴게소전화번호"
-    private String dataBaseDate; // "데이터기준일자"
-    private String providerCode; // "제공기관코드"
-    private String providerName; // "제공기관명"
 
     @Setter
     private Integer weight; // 방향 판단 가중치
@@ -70,14 +65,11 @@ public class RestArea {
                 .routeName(node.get("도로노선명").asText(""))
                 .routeDirection(node.get("도로노선방향").asText(""))
                 .point(point)
-                .roadType(node.get("도로종류").asText(""))
-                .roadNumber(node.get("도로노선번호").asText(""))
                 .latitude(node.get("위도").asDouble(0)) // 기본값으로 0 사용
                 .longitude(node.get("경도").asDouble(0))
                 .type(node.get("휴게소종류").asText(""))
                 .operatingStartTime(node.get("휴게소운영시작시각").asText(""))
                 .operatingEndTime(node.get("휴게소운영종료시각").asText(""))
-                .siteArea(node.get("도로점용면적").asInt(0))
                 .parkingSpaceCount(node.get("주차면수").asInt(0))
                 .isMaintenanceAvailable("Y".equals(node.get("경정비가능여부").asText(null)))
                 .hasGasStation("Y".equals(node.get("주유소유무").asText(null)))
@@ -93,13 +85,10 @@ public class RestArea {
                 .otherFacilities(node.get("기타편의시설").asText(""))
                 .representativeFood(node.get("휴게소대표음식명").asText(""))
                 .phoneNumber(node.get("휴게소전화번호").asText(""))
-                .dataBaseDate(node.get("데이터기준일자").asText(""))
-                .providerCode(node.get("제공기관코드").asText(""))
-                .providerName(node.get("제공기관명").asText(""))
                 .build();
     }
 
-    public static Map<String, List<RestArea>> listToGroupingMap(List<RestArea> restAreaList) {
+    public static Map<String, List<RestArea>> listToGroupingRouteNameMap(List<RestArea> restAreaList) {
         return restAreaList.stream().collect(Collectors.groupingBy(RestArea::getRouteName));
     }
 

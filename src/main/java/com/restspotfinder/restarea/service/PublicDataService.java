@@ -3,6 +3,7 @@ package com.restspotfinder.restarea.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.restspotfinder.interchange.domain.Interchange;
 import com.restspotfinder.restarea.domain.RestArea;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,22 @@ public class PublicDataService {
             e.printStackTrace();
         }
         return restAreaList;
+    }
+
+    public List<Interchange> getInterchangeData() {
+        ClassPathResource jsonFile = new ClassPathResource("/Interchange.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Interchange> interchangeList = new ArrayList<>();
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonFile.getInputStream());
+
+            for (JsonNode node : rootNode) {
+                Interchange ic = Interchange.from(node);
+                interchangeList.add(ic);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return interchangeList;
     }
 }

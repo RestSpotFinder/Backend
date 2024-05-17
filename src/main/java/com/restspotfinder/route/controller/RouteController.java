@@ -51,7 +51,7 @@ public class RouteController extends CommonController {
                                              @RequestParam(defaultValue = "1") int page,
                                              @RequestParam(required = false) String waypoints,
                                              @RequestParam(defaultValue = "false") boolean isTest) {
-        int apiCallCount = countService.increasePlaceSearchCount(LocalDate.now());
+        int apiCallCount = countService.increaseRouteSearchCount(LocalDate.now());
         if (apiCallCount >= 60000) // 월간 한도 60,000 건
             return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
 

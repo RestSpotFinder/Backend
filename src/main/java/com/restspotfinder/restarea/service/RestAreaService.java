@@ -1,5 +1,6 @@
 package com.restspotfinder.restarea.service;
 
+import com.restspotfinder.interchange.service.InterchangeService;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.repository.RestAreaRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class RestAreaService {
     private final RestAreaRepository restAreaRepository;
+    private final InterchangeService interchangeService;
 
     public List<RestArea> getListNearbyRoutes(long routeId) {
         return restAreaRepository.findNearbyRoutes(routeId);
@@ -26,31 +28,15 @@ public class RestAreaService {
                 .orElseThrow(() -> new NullPointerException("[RestArea] restAreaId : " + restAreaId));
     }
 
-    public List<RestArea> filterAccessibleRestAreas(List<RestArea> initList){
-        Map<String, List<RestArea>> groupingMap = RestArea.listToGroupingMap(initList);
+    public List<RestArea> filterAccessibleRestAreas(long routeId, List<RestArea> initList) {
+        Map<String, List<RestArea>> groupingMap = RestArea.listToGroupingRouteNameMap(initList);
         Map<String, String> directionMap = groupingMap.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> getRouteDirection(entry.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> interchangeService.getDirectionByRoute(routeId, entry.getKey())));
 
         return initList.stream()
                 .filter(r -> {
                     String direction = directionMap.get(r.getRouteName());
                     return direction != null && (direction.equals("판별 불가") || r.getRouteDirection().equals(direction) || r.getRouteDirection().equals("양방향"));
                 }).toList();
-    }
-
-    /***
-     * 도로명 기준 으로 필터링 (경부선, 중부선)
-     * 각 도로 기준 으로 방향 판단
-     * 판단된 방향에 존재 하는 RestArea 만 필터링
-    */
-    public String getRouteDirection(List<RestArea> restAreaList) {
-        if (restAreaList.size() < 2) // 휴게소 가 1개 이하인 경우 판단할 수 없다.
-            return "판별 불가";
-
-        RestArea firstArea = restAreaList.get(0);
-        RestArea secondArea = restAreaList.get(1);
-
-        int weight = firstArea.getWeight() - secondArea.getWeight();
-        return (weight > 0) ? "상행" : "하행";
     }
 }
