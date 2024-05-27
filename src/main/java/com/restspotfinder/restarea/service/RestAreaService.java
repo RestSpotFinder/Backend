@@ -3,6 +3,7 @@ package com.restspotfinder.restarea.service;
 import com.restspotfinder.interchange.service.InterchangeService;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.repository.RestAreaRepository;
+import com.restspotfinder.route.domain.Route;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +29,10 @@ public class RestAreaService {
                 .orElseThrow(() -> new NullPointerException("[RestArea] restAreaId : " + restAreaId));
     }
 
-    public List<RestArea> filterAccessibleRestAreas(long routeId, List<RestArea> initList) {
+    public List<RestArea> filterAccessibleRestAreas(Route route, List<RestArea> initList) {
         Map<String, List<RestArea>> groupingMap = RestArea.listToGroupingRouteNameMap(initList);
         Map<String, String> directionMap = groupingMap.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, entry -> interchangeService.getDirectionByRoute(routeId, entry.getKey())));
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> interchangeService.getDirectionByRoute(route, entry.getKey())));
 
         return initList.stream()
                 .filter(r -> {
