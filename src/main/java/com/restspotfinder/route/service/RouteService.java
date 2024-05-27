@@ -18,4 +18,10 @@ public class RouteService {
     public List<Route> create(List<NaverRoute> naverRouteList, long searchId, String start, String goal, String waypoints) {
         return routeRepository.saveAll(Route.fromList(naverRouteList, searchId, start, goal, waypoints));
     }
+
+    @Transactional
+    public Route getOneById(long routeId){
+        return routeRepository.findById(routeId)
+                .orElseThrow(() -> new NullPointerException("[Route] routeId : " + routeId));
+    }
 }

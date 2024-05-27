@@ -4,6 +4,8 @@ import com.restspotfinder.common.CommonController;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.response.RestAreaResponse;
 import com.restspotfinder.restarea.service.RestAreaService;
+import com.restspotfinder.route.domain.Route;
+import com.restspotfinder.route.service.RouteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequestMapping("/api/restarea")
 public class RestAreaController extends CommonController {
     private final RestAreaService restAreaService;
+    private final RouteService routeService;
 
     @Operation(summary = "단 건 휴게소 조회 API")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array =
@@ -40,7 +43,8 @@ public class RestAreaController extends CommonController {
     @ArraySchema(schema = @Schema(implementation = RestAreaResponse.class)))})
     @GetMapping("/route")
     public ResponseEntity<?> getOneByRouteId(@RequestParam long routeId) {
-        List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(routeId);
+        Route route = routeService.getOneById(routeId);
+        List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(route);
         List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(routeId, restAreaList);
 
         return SuccessReturn(RestAreaResponse.fromList(filteredRestAreaList));

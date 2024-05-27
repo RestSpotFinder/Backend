@@ -19,8 +19,8 @@ public class RestAreaService {
     private final RestAreaRepository restAreaRepository;
     private final InterchangeService interchangeService;
 
-    public List<RestArea> getListNearbyRoutes(long routeId) {
-        return restAreaRepository.findNearbyRoutes(routeId);
+    public List<RestArea> getListNearbyRoutes(Route route) {
+        return restAreaRepository.findNearbyRoutes(route.getLineString(), 300);
     }
 
     public RestArea getOneById(long restAreaId) {
