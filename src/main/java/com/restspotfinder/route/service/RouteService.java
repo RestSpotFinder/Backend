@@ -24,4 +24,9 @@ public class RouteService {
         return routeRepository.findById(routeId)
                 .orElseThrow(() -> new NullPointerException("[Route] routeId : " + routeId));
     }
+
+    @Transactional
+    public List<Route> getListBySearchId(long searchId){
+        return routeRepository.findBySearchId(searchId);
+    }
 }
