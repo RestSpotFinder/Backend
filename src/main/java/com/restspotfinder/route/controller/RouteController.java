@@ -61,4 +61,11 @@ public class RouteController extends CommonController {
 
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
+
+    @Operation(summary = "SearchId로 경로 검색 API")
+    @GetMapping("/search")
+    public ResponseEntity<?> getRouteById(@RequestParam long searchId) {
+        List<Route> routeList = routeService.getListBySearchId(searchId);
+        return SuccessReturn(RouteResponse.fromList(routeList));
+    }
 }
