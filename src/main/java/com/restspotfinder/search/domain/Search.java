@@ -19,14 +19,12 @@ public class Search {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long searchId;
     @Enumerated(EnumType.STRING)
-    private SearchType type; // ex) place, route
-    private Boolean isTest;
+    private SearchType type; // ex) recent, route
     private LocalDateTime createdAt;
 
-    public static Search from(SearchType searchType, Boolean isTest){
+    public static Search from(SearchType searchType){
         return Search.builder()
                 .type(searchType)
-                .isTest(isTest)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

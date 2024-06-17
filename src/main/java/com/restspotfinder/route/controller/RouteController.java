@@ -38,7 +38,6 @@ public class RouteController extends CommonController {
     private final NaverRouteService naverRouteService;
 
     @Operation(summary = "경로 검색 API", description = "경유지(waypoints)는 최대 5개까지 이며, 구분자로 %7c를 사용 한다. " +
-            "<br> <b>Ex) 테스트 할 경우 isTest = true 로 설정</b> " +
             "<br> <b>Ex) 127.1464289,36.8102415%7C127.3923500,36.6470900 </b> " +
             "<br> <br> page 는 1 or 2를 사용 한다. " +
             "<br> <b>Ex) 1일 경우 [fast, optimal, comfort] 2일 경우 [avoidtoll, avoidcaronly] 타입을 반환 한다.</b>" +
@@ -49,14 +48,13 @@ public class RouteController extends CommonController {
     public ResponseEntity<?> getRouteByPoint(@RequestParam String start,
                                              @RequestParam String goal,
                                              @RequestParam(defaultValue = "1") int page,
-                                             @RequestParam(required = false) String waypoints,
-                                             @RequestParam(defaultValue = "false") boolean isTest) {
+                                             @RequestParam(required = false) String waypoints) {
         int apiCallCount = countService.increaseRouteSearchCount(LocalDate.now());
         if (apiCallCount >= 60000) // 월간 한도 60,000 건
             return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
 
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints, page);
-        Search search = searchService.create(SearchType.route, isTest);
+        Search search = searchService.create(SearchType.route);
         List<Route> routeList = routeService.create(naverRouteList, search.getSearchId(), start, goal, waypoints);
 
         return SuccessReturn(RouteResponse.fromList(routeList));
@@ -66,6 +64,8 @@ public class RouteController extends CommonController {
     @GetMapping("/search")
     public ResponseEntity<?> getRouteById(@RequestParam long searchId) {
         List<Route> routeList = routeService.getListBySearchId(searchId);
+
+        searchService.create(SearchType.recent);
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
 }
