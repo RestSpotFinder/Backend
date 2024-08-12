@@ -2,6 +2,7 @@ package com.restspotfinder.route.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.RouteOption;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,12 @@ public class NaverRouteService {
     @Value("${naver.cloud-platform.client-secret}")
     String CLIENT_SECRET;
 
-    public List<NaverRoute> getRouteData(String start, String goal, String waypoints, int page) {
-        String requestURL = DIRECT5_URL + "?start=" + start + "&goal=" + goal + "&waypoints=" + waypoints + "&option=" + RouteOption.getOptionValues(page);
-        return NaverRoute.fromList(connect(requestURL), RouteOption.getOptionList(page));
+    public List<NaverRoute> getRouteData(RouteRequestDTO routeRequestDTO) {
+        List<RouteOption> routeOption = RouteOption.getOptionList(routeRequestDTO.getPage());
+        String requestURL = routeRequestDTO.getDirect5RequestUrl(DIRECT5_URL);
+        JsonNode resultNode = connect(requestURL);
+
+        return NaverRoute.fromList(resultNode, routeOption);
     }
 
     public JsonNode connect(String requestURL) {

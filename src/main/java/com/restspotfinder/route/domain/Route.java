@@ -1,5 +1,6 @@
 package com.restspotfinder.route.domain;
 
+import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Coordinate;
@@ -33,13 +34,15 @@ public class Route {
 
     private Point start; // 출발지
     private Point goal; // 목적지
+    private String startName; // 출발지 명
+    private String goalName; // 목적지 명
     private Point waypoint1; // 경유지 1
     private Point waypoint2; // 경유지 2
     private Point waypoint3; // 경유지 3
     private Point waypoint4; // 경유지 4
     private Point waypoint5; // 경유지 5
 
-    public static Route from(NaverRoute naverRoute, long searchId, String start, String goal, String waypoints) {
+    public static Route from(NaverRoute naverRoute, long searchId, RouteRequestDTO routeRequestDTO) {
         Route.RouteBuilder builder = Route.builder()
                 .searchId(searchId)
                 .distance(naverRoute.getDistance())
@@ -49,13 +52,15 @@ public class Route {
                 .lineString(new GeometryFactory().createLineString(naverRoute.getPath()))
                 .routeOption(naverRoute.getOption())
                 .createdDate(LocalDateTime.now())
-                .start(convertStringToPoint(start))
-                .goal(convertStringToPoint(goal));
+                .start(convertStringToPoint(routeRequestDTO.getStart()))
+                .startName(routeRequestDTO.getStartName())
+                .goal(convertStringToPoint(routeRequestDTO.getGoal()))
+                .goalName(routeRequestDTO.getGoalName());
 
-        if (waypoints == null || waypoints.isBlank())
+        if (routeRequestDTO.isWaypointsEmpty())
             return builder.build();
 
-        String[] waypointArr = waypoints.split("\\|");
+        String[] waypointArr = routeRequestDTO.getWaypoints().split("\\|");
         for (int i = 0; i < waypointArr.length; i++) {
             Point waypoint = convertStringToPoint(waypointArr[i]);
             switch (i) {
@@ -69,8 +74,8 @@ public class Route {
 
         return builder.build();
     }
-    public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId, String start, String goal, String waypoints) {
-        return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId, start, goal, waypoints)).toList();
+    public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId, RouteRequestDTO routeRequestDTO) {
+        return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId, routeRequestDTO)).toList();
     }
 
     public static Point convertStringToPoint(String location) {

@@ -1,5 +1,6 @@
 package com.restspotfinder.route.service;
 
+import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.repository.RouteRepository;
@@ -15,8 +16,8 @@ public class RouteService {
     private final RouteRepository routeRepository;
 
     @Transactional
-    public List<Route> create(List<NaverRoute> naverRouteList, long searchId, String start, String goal, String waypoints) {
-        return routeRepository.saveAll(Route.fromList(naverRouteList, searchId, start, goal, waypoints));
+    public List<Route> create(List<NaverRoute> naverRouteList, long searchId, RouteRequestDTO routeRequestDTO) {
+        return routeRepository.saveAll(Route.fromList(naverRouteList, searchId, routeRequestDTO));
     }
 
     @Transactional
