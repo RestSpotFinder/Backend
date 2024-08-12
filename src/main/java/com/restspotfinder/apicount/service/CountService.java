@@ -18,7 +18,8 @@ public class CountService {
 
     @Transactional
     public int increasePlaceSearchCount(LocalDate today) {
-        PlaceSearchCount placeSearchCount = placeSearchCountRepository.findByDateWithPessimisticLock(today);
+        PlaceSearchCount placeSearchCount = placeSearchCountRepository.findByDateWithPessimisticLock(today)
+                .orElse(PlaceSearchCount.init(LocalDate.now()));
         int count = placeSearchCount.increase();
 
         placeSearchCountRepository.save(placeSearchCount);
