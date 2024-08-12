@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface PlaceSearchCountRepository extends JpaRepository<PlaceSearchCount, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT c FROM PlaceSearchCount c WHERE c.createdAt = :today")
-    PlaceSearchCount findByDateWithPessimisticLock(LocalDate today);
+    Optional<PlaceSearchCount> findByDateWithPessimisticLock(LocalDate today);
 }

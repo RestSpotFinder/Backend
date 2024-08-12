@@ -18,7 +18,8 @@ public class CountService {
 
     @Transactional
     public int increasePlaceSearchCount(LocalDate today) {
-        PlaceSearchCount placeSearchCount = placeSearchCountRepository.findByDateWithPessimisticLock(today);
+        PlaceSearchCount placeSearchCount = placeSearchCountRepository.findByDateWithPessimisticLock(today)
+                .orElse(PlaceSearchCount.init(LocalDate.now()));
         int count = placeSearchCount.increase();
 
         placeSearchCountRepository.save(placeSearchCount);
@@ -28,8 +29,8 @@ public class CountService {
     @Transactional
     public int increaseRouteSearchCount(LocalDate today) {
         LocalDate startOfMonth = today.withDayOfMonth(1);
-        System.out.println("startOfMonth = " + startOfMonth);
-        RouteSearchCount routeSearchCount = routeSearchCountRepository.findByDateWithPessimisticLock(startOfMonth);
+        RouteSearchCount routeSearchCount = routeSearchCountRepository.findByDateWithPessimisticLock(startOfMonth)
+                .orElse(RouteSearchCount.init(startOfMonth));
         int count = routeSearchCount.increase();
 
         routeSearchCountRepository.save(routeSearchCount);

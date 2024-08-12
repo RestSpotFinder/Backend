@@ -3,13 +3,13 @@ package com.restspotfinder.route.controller;
 import com.restspotfinder.apicount.service.CountService;
 import com.restspotfinder.common.CommonController;
 import com.restspotfinder.common.ResponseCode;
+import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.response.RouteResponse;
 import com.restspotfinder.route.service.NaverRouteService;
 import com.restspotfinder.route.service.RouteService;
 import com.restspotfinder.search.domain.Search;
-import com.restspotfinder.search.domain.SearchType;
 import com.restspotfinder.search.service.SearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -19,10 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,17 +42,14 @@ public class RouteController extends CommonController {
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array =
     @ArraySchema(schema = @Schema(implementation = RouteResponse.class)))})
     @GetMapping
-    public ResponseEntity<?> getRouteByPoint(@RequestParam String start,
-                                             @RequestParam String goal,
-                                             @RequestParam(defaultValue = "1") int page,
-                                             @RequestParam(required = false) String waypoints) {
+    public ResponseEntity<?> getRouteByPoint(@ModelAttribute RouteRequestDTO routeRequestDTO) {
         int apiCallCount = countService.increaseRouteSearchCount(LocalDate.now());
         if (apiCallCount >= 60000) // 월간 한도 60,000 건
             return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
 
-        List<NaverRoute> naverRouteList = naverRouteService.getRouteData(start, goal, waypoints, page);
-        Search search = searchService.create(SearchType.route);
-        List<Route> routeList = routeService.create(naverRouteList, search.getSearchId(), start, goal, waypoints);
+        List<NaverRoute> naverRouteList = naverRouteService.getRouteData(routeRequestDTO);
+        Search search = searchService.createByRoute(routeRequestDTO);
+        List<Route> routeList = routeService.create(naverRouteList, search.getSearchId(), routeRequestDTO);
 
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
@@ -64,8 +58,8 @@ public class RouteController extends CommonController {
     @GetMapping("/search")
     public ResponseEntity<?> getRouteById(@RequestParam long searchId) {
         List<Route> routeList = routeService.getListBySearchId(searchId);
+        searchService.createByRecent();
 
-        searchService.create(SearchType.recent);
         return SuccessReturn(RouteResponse.fromList(routeList));
     }
 }
