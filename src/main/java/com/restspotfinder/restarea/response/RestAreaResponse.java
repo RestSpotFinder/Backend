@@ -86,7 +86,7 @@ public class RestAreaResponse {
                 .build();
     }
 
-    public static List<RestAreaResponse> fromList(List<RestArea> restAreaList){
+    public static List<RestAreaResponse> from(List<RestArea> restAreaList){
         return restAreaList.stream().map(RestAreaResponse::from).toList();
     }
 }

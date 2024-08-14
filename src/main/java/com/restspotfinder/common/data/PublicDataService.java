@@ -1,4 +1,4 @@
-package com.restspotfinder.restarea.service;
+package com.restspotfinder.common.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
