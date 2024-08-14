@@ -8,10 +8,6 @@ import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 
 @Entity
 @Getter
@@ -59,7 +55,6 @@ public class RestArea {
         double xValue = node.get("경도").asDouble(0);
         double yValue = node.get("위도").asDouble(0);
         Point point = geometryFactory.createPoint(new Coordinate(xValue, yValue));
-        System.out.println("position = " + point);
         return RestArea.builder()
                 .name(node.get("휴게소명").asText("")) // 기본값으로 "" 사용
                 .routeName(node.get("도로노선명").asText(""))
@@ -87,40 +82,4 @@ public class RestArea {
                 .phoneNumber(node.get("휴게소전화번호").asText(""))
                 .build();
     }
-
-    public static Map<String, List<RestArea>> listToGroupingRouteNameMap(List<RestArea> restAreaList) {
-        return restAreaList.stream().collect(Collectors.groupingBy(RestArea::getRouteName));
-    }
-
-    //            {
-//                "휴게소명" : "덕유산(대전)",
-//                    "도로종류" : "고속국도",
-//                    "도로노선번호" : "35",
-//                    "도로노선명" : "대전통영선",
-//                    "도로노선방향" : "상행",
-//                    "위도" : "35.816481",
-//                    "경도" : "127.646149",
-//                    "휴게소종류" : "일반휴게소",
-//                    "휴게소운영시작시각" : "00:00",
-//                    "휴게소운영종료시각" : "23:59",
-//                    "도로점용면적" : "43941",
-//                    "주차면수" : "191",
-//                    "경정비가능여부" : "N",
-//                    "주유소유무" : "Y",
-//                    "LPG충전소유무" : "Y",
-//                    "전기차충전소유무" : "Y",
-//                    "버스환승가능여부" : "N",
-//                    "쉼터유무" : "N",
-//                    "화장실유무" : "Y",
-//                    "약국유무" : "N",
-//                    "수유실유무" : "Y",
-//                    "매점유무" : "Y",
-//                    "음식점유무" : "Y",
-//                    "기타편의시설" : "",
-//                    "휴게소대표음식명" : "흑돼지김치찌개",
-//                    "휴게소전화번호" : "063-353-4200",
-//                    "데이터기준일자" : "2023-08-24",
-//                    "제공기관코드" : "B500004",
-//                    "제공기관명" : "한국도로공사"
-//            }
 }

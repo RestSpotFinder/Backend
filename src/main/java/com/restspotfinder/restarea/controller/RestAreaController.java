@@ -1,6 +1,5 @@
 package com.restspotfinder.restarea.controller;
 
-import com.restspotfinder.common.CommonController;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.response.RestAreaResponse;
 import com.restspotfinder.restarea.service.RestAreaService;
@@ -26,7 +25,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/restarea")
-public class RestAreaController extends CommonController {
+public class RestAreaController {
     private final RestAreaService restAreaService;
     private final RouteService routeService;
 
@@ -35,18 +34,20 @@ public class RestAreaController extends CommonController {
     @ArraySchema(schema = @Schema(implementation = RestAreaResponse.class)))})
     @GetMapping
     public ResponseEntity<?> getOneByRestAreaId(@RequestParam long restAreaId) {
-        return SuccessReturn(RestAreaResponse.from(restAreaService.getOneById(restAreaId)));
+        RestArea restArea = restAreaService.getOneById(restAreaId);
+
+        return ResponseEntity.ok().body(RestAreaResponse.from(restArea));
     }
 
     @Operation(summary = "경로 별 접근 가능 휴게소 목록 조회 API")
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array =
     @ArraySchema(schema = @Schema(implementation = RestAreaResponse.class)))})
     @GetMapping("/route")
-    public ResponseEntity<?> getOneByRouteId(@RequestParam long routeId) {
+    public ResponseEntity<?> getListByRouteId(@RequestParam long routeId) {
         Route route = routeService.getOneById(routeId);
         List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(route);
         List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(route, restAreaList);
 
-        return SuccessReturn(RestAreaResponse.fromList(filteredRestAreaList));
+        return ResponseEntity.ok().body(RestAreaResponse.from(filteredRestAreaList));
     }
 }
