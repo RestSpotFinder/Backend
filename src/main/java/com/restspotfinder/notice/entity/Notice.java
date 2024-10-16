@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -19,5 +21,15 @@ public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String text;
+    private String title;
+    private String content;
+    private LocalDateTime createdAt;
+
+    public static Notice of(String title, String content){
+        return Notice.builder()
+                .title(title)
+                .content(content)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }
