@@ -1,5 +1,6 @@
 package com.restspotfinder.restarea.controller;
 
+import com.restspotfinder.common.CommonController;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.response.RestAreaResponse;
 import com.restspotfinder.restarea.service.RestAreaService;
@@ -25,7 +26,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/restarea")
-public class RestAreaController {
+public class RestAreaController extends CommonController {
     private final RestAreaService restAreaService;
     private final RouteService routeService;
 
@@ -36,7 +37,7 @@ public class RestAreaController {
     public ResponseEntity<?> getOneByRestAreaId(@RequestParam long restAreaId) {
         RestArea restArea = restAreaService.getOneById(restAreaId);
 
-        return ResponseEntity.ok().body(RestAreaResponse.from(restArea));
+        return SuccessReturn(RestAreaResponse.from(restArea));
     }
 
     @Operation(summary = "경로 별 접근 가능 휴게소 목록 조회 API")
@@ -48,6 +49,6 @@ public class RestAreaController {
         List<RestArea> restAreaList = restAreaService.getListNearbyRoutes(route);
         List<RestArea> filteredRestAreaList = restAreaService.filterAccessibleRestAreas(route, restAreaList);
 
-        return ResponseEntity.ok().body(RestAreaResponse.from(filteredRestAreaList));
+        return SuccessReturn(RestAreaResponse.from(filteredRestAreaList));
     }
 }
