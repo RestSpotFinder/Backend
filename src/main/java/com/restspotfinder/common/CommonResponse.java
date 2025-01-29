@@ -12,7 +12,7 @@ public record CommonResponse(int code, String message, Object data) {
                 .message(responseCode.getMsg())
                 .build();
     }
-    public static CommonResponse from(ResponseCode responseCode, Object data) {
+    public static CommonResponse of(ResponseCode responseCode, Object data) {
         return CommonResponse.builder()
                 .code(responseCode.getCode())
                 .message(responseCode.getMsg())

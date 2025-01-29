@@ -1,8 +1,7 @@
 package com.restspotfinder.route.controller;
 
-import com.restspotfinder.apicount.service.CountService;
+import com.restspotfinder.apicount.service.ApiCountService;
 import com.restspotfinder.common.CommonController;
-import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import com.restspotfinder.route.domain.NaverRoute;
 import com.restspotfinder.route.domain.Route;
@@ -30,7 +29,7 @@ import java.util.List;
 @RequestMapping("/api/route")
 public class RouteController extends CommonController {
     private final RouteService routeService;
-    private final CountService countService;
+    private final ApiCountService apiCountService;
     private final SearchService searchService;
     private final NaverRouteService naverRouteService;
 
@@ -43,9 +42,8 @@ public class RouteController extends CommonController {
     @ArraySchema(schema = @Schema(implementation = RouteResponse.class)))})
     @GetMapping
     public ResponseEntity<?> getRouteByPoint(@ModelAttribute RouteRequestDTO routeRequestDTO) {
-        int apiCallCount = countService.increaseRouteSearchCount(LocalDate.now());
-        if (apiCallCount >= 60000) // 월간 한도 60,000 건
-            return ErrorReturn(ResponseCode.API_CALL_LIMIT_ERROR);
+        // 월간 한도 60,000 건
+        apiCountService.checkRoutSearchCount(LocalDate.now());
 
         List<NaverRoute> naverRouteList = naverRouteService.getRouteData(routeRequestDTO);
         Search search = searchService.createByRoute(routeRequestDTO);
