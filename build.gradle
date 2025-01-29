@@ -11,11 +11,15 @@ java {
     sourceCompatibility = '17'
 }
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()  // 모든 프로젝트에서 Maven Central을 사용할 수 있게 설정
+    }
 }
 
 dependencies {
+    implementation project(':log_module')
+
     // Spring Boot Starter
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -63,4 +67,10 @@ tasks.register('copySecret', Copy) {
     from './Config/backend' // 서브 모듈 디렉토리 경로
     include "*.yml"  // 설정 파일 복사
     into 'src/main/resources'  // 붙여넣을 위치
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 }
