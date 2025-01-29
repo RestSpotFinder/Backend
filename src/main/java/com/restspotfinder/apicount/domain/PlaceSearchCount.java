@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class PlaceSearchCount {
     @Id
     private LocalDate createdAt;
-    private int naverCount;
+    private long naverCount;
 
 
     public static PlaceSearchCount init(LocalDate date){
@@ -26,7 +26,7 @@ public class PlaceSearchCount {
                 .build();
     }
 
-    public int increase(){
-        return ++naverCount;
+    public void increase(){
+        ++naverCount;
     }
 }

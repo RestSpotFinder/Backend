@@ -27,7 +27,7 @@ public class RouteSearchCount {
                 .build();
     }
 
-    public int increase(){
-        return ++naverCount;
+    public void increase(){
+        ++naverCount;
     }
 }
