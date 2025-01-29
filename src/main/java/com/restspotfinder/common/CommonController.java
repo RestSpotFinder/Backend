@@ -8,7 +8,7 @@ public class CommonController {
     }
 
     public ResponseEntity<?> SuccessReturn(Object data) {
-        return ResponseEntity.ok().body(CommonResponse.from(ResponseCode.SUCCESS, data));
+        return ResponseEntity.ok().body(CommonResponse.of(ResponseCode.SUCCESS, data));
     }
 
     public ResponseEntity<?> ErrorReturn(ResponseCode responseCode) {
@@ -16,6 +16,6 @@ public class CommonController {
     }
 
     public ResponseEntity<?> ErrorReturn(ResponseCode responseCode, Object data) {
-        return ResponseEntity.ok().body(CommonResponse.from(responseCode, data));
+        return ResponseEntity.ok().body(CommonResponse.of(responseCode, data));
     }
 }
