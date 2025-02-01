@@ -1,2 +1,3 @@
 rootProject.name = 'RestSpotFinder'
 include 'log_module'
+include 'exception_module'

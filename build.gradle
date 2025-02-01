@@ -19,6 +19,7 @@ allprojects {
 
 dependencies {
     implementation project(':log_module')
+    implementation project(':exception_module')
 
     // Spring Boot Starter
     implementation 'org.springframework.boot:spring-boot-starter'

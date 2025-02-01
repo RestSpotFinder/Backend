@@ -1,12 +1,11 @@
 package com.restspotfinder.apicount.service;
 
-import com.log_module.exception.CommonException;
+import com.exception_module.exception.CommonException;
 import com.restspotfinder.apicount.domain.PlaceSearchCount;
 import com.restspotfinder.apicount.domain.RouteSearchCount;
 import com.restspotfinder.apicount.exception.ApiCountErrorCode;
 import com.restspotfinder.apicount.repository.PlaceSearchCountRepository;
 import com.restspotfinder.apicount.repository.RouteSearchCountRepository;
-import com.restspotfinder.common.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
