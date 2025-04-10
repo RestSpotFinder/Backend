@@ -1,6 +1,6 @@
 package com.restspotfinder.apicount.exception;
 
-import com.exception_module.exception.CommonErrorCode;
+import com.restspotfinder.common.exception.CommonErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
