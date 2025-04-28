@@ -1,5 +1,6 @@
 package com.restspotfinder.restarea.response;
 
+import com.restspotfinder.restarea.collection.RestAreas;
 import com.restspotfinder.restarea.domain.RestArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -86,7 +87,7 @@ public class RestAreaResponse {
                 .build();
     }
 
-    public static List<RestAreaResponse> from(List<RestArea> restAreaList){
-        return restAreaList.stream().map(RestAreaResponse::from).toList();
+    public static List<RestAreaResponse> from(RestAreas restAreas){
+        return restAreas.restAreaList().stream().map(RestAreaResponse::from).toList();
     }
 }

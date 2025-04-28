@@ -50,6 +50,15 @@ public class RestArea {
     private Integer weight; // 방향 판단 가중치
     private String naverMapUrl; // 매칭되는 네이버 맵 페이지 URL
 
+    public boolean isAccessible(String routeDirectionFromRoute) {
+        return routeDirectionFromRoute != null &&
+                (
+                        routeDirectionFromRoute.equals("판별 불가")
+                                || this.routeDirection.equals(routeDirectionFromRoute)
+                                || this.routeDirection.equals("양방향")
+                );
+    }
+
     public static RestArea from(JsonNode node) {
         GeometryFactory geometryFactory = new GeometryFactory();
         double xValue = node.get("경도").asDouble(0);

@@ -1,6 +1,8 @@
 package com.restspotfinder.restarea.service.impl;
 
 import com.restspotfinder.interchange.service.InterchangeService;
+import com.restspotfinder.restarea.collection.Directions;
+import com.restspotfinder.restarea.collection.RestAreas;
 import com.restspotfinder.restarea.domain.RestArea;
 import com.restspotfinder.restarea.repository.RestAreaRepository;
 import com.restspotfinder.restarea.service.RestAreaService;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,25 +30,19 @@ public class RestAreaServiceImpl implements RestAreaService {
     }
 
     @Override
-    public List<RestArea> getListNearbyRoutes(Route route) {
-        return restAreaRepository.findNearbyRoutes(route.getLineString(), 300);
-    }
+    public RestAreas getAccessibleRestAreas(Route route) {
+        List<RestArea> restAreaList = restAreaRepository.findNearbyRoutes(route.getLineString(), 300);
+        RestAreas restAreas = new RestAreas(restAreaList);
 
-    @Override
-    public List<RestArea> filterAccessibleRestAreas(Route route, List<RestArea> restAreaList) {
-        Set<String> routeNameSet = restAreaList.stream().map(RestArea::getRouteName).collect(Collectors.toSet());
-        Map<String, String> directionMap = routeNameSet.stream()
-                .collect(Collectors.toMap(
-                        routeName -> routeName,
-                        routeName -> interchangeService.getDirectionByRoute(route, routeName)
-                ));
+        Set<String> routeNameSet = restAreas.extractRouteNames();
+        Directions directions = new Directions(
+                routeNameSet.stream()
+                        .collect(Collectors.toMap(
+                                routeName -> routeName,
+                                routeName -> interchangeService.getDirectionByRoute(route, routeName)
+                        ))
+        );
 
-        return restAreaList.stream()
-                .filter(r -> {
-                    String direction = directionMap.get(r.getRouteName());
-                    return direction != null && (direction.equals("판별 불가")
-                            || r.getRouteDirection().equals(direction)
-                            || r.getRouteDirection().equals("양방향"));
-                }).toList();
+        return restAreas.filterAccessible(directions);
     }
 }
