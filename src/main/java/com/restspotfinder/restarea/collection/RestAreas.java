@@ -1,7 +1,10 @@
 package com.restspotfinder.restarea.collection;
 
 import com.restspotfinder.restarea.domain.RestArea;
+import com.restspotfinder.route.type.Direction;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,10 +14,10 @@ public record RestAreas(List<RestArea> restAreaList) {
         return restAreaList.stream().map(RestArea::getRouteName).collect(Collectors.toSet());
     }
 
-    public RestAreas filterAccessible(Directions directions) {
+    public RestAreas filterAccessible(Map<String, Direction> directionMap) {
         List<RestArea> accessibleList = restAreaList.stream()
                 .filter(restArea -> {
-                    String direction = directions.getDirection(restArea.getRouteName());
+                    Direction direction = directionMap.get(restArea.getRouteName());
                     return restArea.isAccessible(direction);
                 })
                 .toList();

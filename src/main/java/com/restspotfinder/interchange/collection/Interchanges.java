@@ -1,6 +1,7 @@
 package com.restspotfinder.interchange.collection;
 
 import com.restspotfinder.interchange.domain.Interchange;
+import com.restspotfinder.route.type.Direction;
 
 import java.util.List;
 
@@ -25,14 +26,13 @@ public class Interchanges {
         return interchangeList.get(interchangeList.size() - 1);
     }
 
-    public String calculateDirection() {
+    public Direction calculateDirection() {
         if (interchangeList.size() < 2) {
-//            throw new IllegalStateException("방향을 계산하기에 충분한 교차로가 없습니다.");
             System.err.println("경로 판별 에러: 교차로가 부족합니다.");
-            return "판별 불가";
+            return Direction.UNKNOWN;
         }
 
         int weight = getStart().getWeight() - getEnd().getWeight();
-        return weight > 0 ? "상행" : "하행";
+        return weight > 0 ? Direction.UP : Direction.DOWN;
     }
 }

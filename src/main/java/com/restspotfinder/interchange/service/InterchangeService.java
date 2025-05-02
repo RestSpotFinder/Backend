@@ -2,6 +2,7 @@ package com.restspotfinder.interchange.service;
 
 import com.restspotfinder.interchange.collection.Interchanges;
 import com.restspotfinder.interchange.repository.InterchangeRepository;
+import com.restspotfinder.route.type.Direction;
 import com.restspotfinder.route.domain.Route;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,13 @@ public class InterchangeService {
 
 
     // TRUE: 하행, FALSE: 상행
-    public String getDirectionByRoute(Route route, String routeName) {
+    public Direction getDirectionByRoute(Route route, String routeName) {
         System.out.println("----------------------------------------------");
         System.out.println("routeName = " + routeName);
 
         Interchanges interchanges = getInterchangesNearbyRoutes(route, routeName);
-        String direction = interchanges.calculateDirection();
+        Direction direction = interchanges.calculateDirection();
         System.out.println("direction = " + direction);
-
         return direction;
     }
 }
