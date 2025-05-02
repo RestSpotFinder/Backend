@@ -74,6 +74,7 @@ public class Route {
 
         return builder.build();
     }
+
     public static List<Route> fromList(List<NaverRoute> naverRouteList, long searchId, RouteRequestDTO routeRequestDTO) {
         return naverRouteList.stream().map(naverRoute -> Route.from(naverRoute, searchId, routeRequestDTO)).toList();
     }

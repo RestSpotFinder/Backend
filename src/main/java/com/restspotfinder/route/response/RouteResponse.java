@@ -1,5 +1,6 @@
 package com.restspotfinder.route.response;
 
+import com.restspotfinder.route.collection.Routes;
 import com.restspotfinder.route.domain.Route;
 import com.restspotfinder.route.domain.RouteOption;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,7 +49,7 @@ public class RouteResponse {
                 .build();
     }
 
-    public static List<RouteResponse> fromList(List<Route> routeList){
-        return routeList.stream().map(RouteResponse::from).toList();
+    public static List<RouteResponse> fromRoutes(Routes routes){
+        return routes.routeList().stream().map(RouteResponse::from).toList();
     }
 }
