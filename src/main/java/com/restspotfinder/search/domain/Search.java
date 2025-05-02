@@ -1,5 +1,6 @@
 package com.restspotfinder.search.domain;
 
+import com.restspotfinder.route.collection.Routes;
 import com.restspotfinder.route.controller.request.RouteRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,11 +26,20 @@ public class Search {
     private String goalName;
     private LocalDateTime createdAt;
 
-    public static Search fromRoute(RouteRequestDTO routeRequestDTO){
+    public static Search fromRequestDTO(RouteRequestDTO routeRequestDTO){
         return Search.builder()
                 .type(SearchType.route)
                 .startName(routeRequestDTO.getStartName())
                 .goalName(routeRequestDTO.getGoalName())
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static Search fromRoutes(Routes routes){
+        return Search.builder()
+                .type(SearchType.route)
+                .startName(routes.getStartName())
+                .goalName(routes.getGoalName())
                 .createdAt(LocalDateTime.now())
                 .build();
     }

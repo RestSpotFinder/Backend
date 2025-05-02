@@ -1,10 +1,8 @@
 package com.restspotfinder.restarea.service;
 
-import com.restspotfinder.place.domain.NaverPlace;
-import com.restspotfinder.place.service.NaverPlaceService;
 import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.restarea.repository.RestAreaRepository;
-import com.restspotfinder.route.repository.RouteRepository;
+import com.restspotfinder.route.domain.Route;
+import com.restspotfinder.route.service.RouteService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +16,17 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 class RestAreaServiceTest {
     @Autowired
+    RouteService routeService;
+
+    @Autowired
     RestAreaService restAresService;
-    @Autowired
-    RestAreaRepository restAreaRepository;
-    @Autowired
-    RouteRepository routeRepository;
-    @Autowired
-    NaverPlaceService naverPlaceService;
 
     @Test
     void filterAccessibleRestAreas() {
         long routeId = 590;
+        Route route = routeService.getOneById(routeId);
 
-        List<RestArea> restAreaList = restAresService.getListNearbyRoutes(routeId);
-        for (RestArea restArea : restAreaList) {
-            System.out.println("restArea = " + restArea);
-        }
-
-        List<RestArea> filteredList = restAresService.filterAccessibleRestAreas(routeId, restAreaList);
+        List<RestArea> filteredList = restAresService.getAccessibleRestAreas(route).restAreaList();
 
         for (RestArea restArea : filteredList) {
             System.out.println("restArea = " + restArea);

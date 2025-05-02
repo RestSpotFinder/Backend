@@ -2,11 +2,14 @@ package com.restspotfinder.restarea.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.restspotfinder.route.type.Direction;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
+
+import java.util.Objects;
 
 
 @Entity
@@ -49,6 +52,15 @@ public class RestArea {
     @Setter
     private Integer weight; // 방향 판단 가중치
     private String naverMapUrl; // 매칭되는 네이버 맵 페이지 URL
+
+    public boolean isAccessible(Direction routeDirectionFromRoute) {
+        return routeDirectionFromRoute != null &&
+                (
+                        routeDirectionFromRoute == Direction.UNKNOWN ||
+                                Objects.equals(this.routeDirection, routeDirectionFromRoute.getLabel()) ||
+                                Objects.equals(this.routeDirection, Direction.BOTH.getLabel())
+                );
+    }
 
     public static RestArea from(JsonNode node) {
         GeometryFactory geometryFactory = new GeometryFactory();
