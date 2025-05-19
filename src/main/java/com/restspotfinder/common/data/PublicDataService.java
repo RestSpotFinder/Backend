@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.restspotfinder.interchange.domain.Interchange;
 import com.restspotfinder.restarea.domain.RestArea;
+import com.restspotfinder.sleeparea.domain.SleepArea;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +50,24 @@ public class PublicDataService {
             e.printStackTrace();
         }
         return interchangeList;
+    }
+
+    public List<SleepArea> getSleepAreaData() {
+        ClassPathResource jsonFile = new ClassPathResource("/SleepArea.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<SleepArea> sleepAreaList = new ArrayList<>();
+        try {
+            JsonNode rootNode = objectMapper.readTree(jsonFile.getInputStream());
+            ArrayNode recordsNode = (ArrayNode) rootNode.get("records");
+
+            for (JsonNode node : recordsNode) {
+                SleepArea sleepArea = SleepArea.from(node);
+                sleepAreaList.add(sleepArea);
+                System.out.println("sleepArea = " + objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(sleepArea));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sleepAreaList;
     }
 }
