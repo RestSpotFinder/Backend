@@ -34,21 +34,45 @@ public class NaverAddressService {
     @Transactional
     public List<NaverPlace> getPlaceListByAddress(String address) {
         String requestURL = REQUEST_URL + address;
-        JsonNode jsonNode = connect_cloud(requestURL);
-        for (JsonNode node : jsonNode) {
-            System.out.println("node = " + node);
+        JsonNode jsonNode = connectCloud(requestURL);
+//        for (JsonNode node : jsonNode) {
+//            System.out.println("node = " + node);
+//        }
+
+        List<NaverPlace> naverPlaceList = new ArrayList<>();
+        JsonNode addressesNode = jsonNode.get("addresses");
+
+        if (addressesNode != null && addressesNode.isArray()) {
+            for (JsonNode addressNode : addressesNode) {
+                NaverPlace place = fromAddressNode(addressNode);
+                naverPlaceList.add(place);
+            }
         }
 
-        return new ArrayList<>();
+        return naverPlaceList;
 
 //        return NaverPlace.fromArray((ArrayNode) jsonNode.get("items"));
     }
 
-    public JsonNode connect_cloud(String requestURL) {
+    private NaverPlace fromAddressNode(JsonNode node) {
+        String title = node.has("roadAddress") && !node.get("roadAddress").asText().isEmpty()
+                ? node.get("roadAddress").asText() : node.get("jibunAddress").asText();
+
+        return NaverPlace.builder()
+                .title(title)  // 도로명 또는 지번 주소 (사용자 입력 값)
+                .mapX(node.get("x").asText())
+                .mapY(node.get("y").asText())
+                .category(null)
+                .address(node.get("jibunAddress").asText())  // 지번 주소
+                .roadAddress(node.get("roadAddress").asText())  // 도로명 주소
+                .link(null)
+                .description(null)
+                .telephone(null)
+                .build();
+    }
+
+    public JsonNode connectCloud(String requestURL) {
         try {
-            System.out.println("requestURL = " + requestURL);
-            System.out.println("CLOUD_CLIENT_ID = " + CLOUD_CLIENT_ID);
-            System.out.println("CLOUD_CLIENT_SECRET = " + CLOUD_CLIENT_SECRET);
             HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
             RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
             HttpHeaders headers = new HttpHeaders();
