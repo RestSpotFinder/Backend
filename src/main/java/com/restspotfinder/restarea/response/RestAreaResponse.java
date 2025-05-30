@@ -1,11 +1,8 @@
 package com.restspotfinder.restarea.response;
 
-import com.restspotfinder.restarea.collection.RestAreas;
 import com.restspotfinder.restarea.domain.RestArea;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-
-import java.util.List;
 
 
 @Getter
@@ -57,7 +54,12 @@ public class RestAreaResponse {
     private String phoneNumber;
     @Schema(description = "매칭되는 NAVER MAP URL")
     private String naverMapUrl;
+    @Schema(description = "다음 휴게소까지의 거리(km)")
+    private Integer nextRestAreaDistance;
 
+    public void setNextRestAreaDistance(Double nextRestAreaDistance) {
+        this.nextRestAreaDistance = (int) Math.round(nextRestAreaDistance);
+    }
 
     public static RestAreaResponse from(RestArea restArea) {
         return RestAreaResponse.builder()
@@ -84,10 +86,7 @@ public class RestAreaResponse {
                 .representativeFood(restArea.getRepresentativeFood())
                 .phoneNumber(restArea.getPhoneNumber())
                 .naverMapUrl(restArea.getNaverMapUrl())
+                .nextRestAreaDistance(0)
                 .build();
-    }
-
-    public static List<RestAreaResponse> from(RestAreas restAreas){
-        return restAreas.restAreaList().stream().map(RestAreaResponse::from).toList();
     }
 }

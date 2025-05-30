@@ -2,6 +2,7 @@ package com.restspotfinder.restarea.repository;
 
 import com.restspotfinder.restarea.domain.RestArea;
 import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,25 @@ public interface RestAreaRepository extends JpaRepository<RestArea, Long> {
             nativeQuery = true)
     List<RestArea> findNearbyRoutes(@Param("route") LineString route, @Param("distance") int distance);
 
+    /***
+     * 두 점 사이의 LineString 구간 거리 계산 (km 단위)
+     * 한국 좌표계(EPSG:5179)로 변환하여 정확한 거리 측정
+     ***/
+    @Query(value = """
+    SELECT ST_Length(
+        ST_Transform(
+            ST_LineSubstring(
+                :lineString,
+                ST_LineLocatePoint(:lineString, :point1),
+                ST_LineLocatePoint(:lineString, :point2)
+            ),
+            5179
+        )
+    ) / 1000.0
+    """, nativeQuery = true)
+    Double findDistanceBetweenPointsInKm(
+            @Param("lineString") LineString lineString,
+            @Param("point1") Point point1,
+            @Param("point2") Point point2
+    );
 }

@@ -1,12 +1,11 @@
 package com.restspotfinder.restarea.service;
 
-import com.restspotfinder.restarea.collection.RestAreas;
-import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.route.domain.Route;
+import com.restspotfinder.restarea.response.RestAreaResponse;
+import java.util.List;
 
 
 public interface RestAreaService {
-    RestArea getOneById(long restAreaId);
+    RestAreaResponse getOneById(long restAreaId);
 
-    RestAreas getAccessibleRestAreas(Route route);
+    List<RestAreaResponse> getRestAreasWithPointCounts(long routeI);
 }
