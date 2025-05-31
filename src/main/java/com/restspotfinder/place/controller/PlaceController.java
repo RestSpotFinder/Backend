@@ -3,7 +3,6 @@ package com.restspotfinder.place.controller;
 import com.restspotfinder.place.service.NaverAddressService;
 import com.restspotfinder.apicount.service.ApiCountService;
 import com.restspotfinder.common.CommonController;
-import com.restspotfinder.common.ResponseCode;
 import com.restspotfinder.place.domain.NaverPlace;
 import com.restspotfinder.place.response.PlaceResponse;
 import com.restspotfinder.place.service.NaverPlaceService;
@@ -47,10 +46,6 @@ public class PlaceController extends CommonController {
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver/address")
     public ResponseEntity<?> getPlaceListByAddress(@RequestParam String address, @RequestParam(defaultValue = "false") boolean isTest) {
-//        System.out.println("address = " + address);
-        // 일일 한도 25,000 건
-        apiCountService.checkAddressSearchCount(LocalDate.now());
-
         List<NaverPlace> naverPlaceList = naverAddressService.getPlaceListByAddress(address);
         return SuccessReturn(PlaceResponse.fromList(naverPlaceList));
     }
