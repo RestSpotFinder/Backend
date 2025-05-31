@@ -59,4 +59,21 @@ public class NaverPlace {
         String[] parts = category.split(">");
         return parts[parts.length - 1];
     }
+
+    public static NaverPlace fromJsonNode(JsonNode node) {
+        String title = node.has("roadAddress") && !node.get("roadAddress").asText().isEmpty()
+                ? node.get("roadAddress").asText() : node.get("jibunAddress").asText();
+
+        return NaverPlace.builder()
+                .title(title)  // 도로명 또는 지번 주소
+                .mapX(node.get("x").asText())
+                .mapY(node.get("y").asText())
+                .category(null)
+                .address(node.get("jibunAddress").asText())  // 지번 주소
+                .roadAddress(node.get("roadAddress").asText())  // 도로명 주소
+                .link(null)
+                .description(null)
+                .telephone(null)
+                .build();
+    }
 }

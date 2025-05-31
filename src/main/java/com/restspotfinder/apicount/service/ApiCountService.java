@@ -1,8 +1,10 @@
 package com.restspotfinder.apicount.service;
 
+import com.restspotfinder.apicount.domain.AddressSearchCount;
 import com.restspotfinder.apicount.domain.PlaceSearchCount;
 import com.restspotfinder.apicount.domain.RouteSearchCount;
 import com.restspotfinder.apicount.exception.ApiCountErrorCode;
+import com.restspotfinder.apicount.repository.AddressSearchCountRepository;
 import com.restspotfinder.apicount.repository.PlaceSearchCountRepository;
 import com.restspotfinder.apicount.repository.RouteSearchCountRepository;
 import com.restspotfinder.common.exception.CommonException;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 public class ApiCountService {
     private final PlaceSearchCountRepository placeSearchCountRepository;
     private final RouteSearchCountRepository routeSearchCountRepository;
+    private final AddressSearchCountRepository addressSearchCountRepository;
 
     @Transactional
     public void checkPlaceSearchCount(LocalDate today) {
@@ -43,5 +46,18 @@ public class ApiCountService {
 
         routeSearchCount.increase();
         routeSearchCountRepository.save(routeSearchCount);
+    }
+
+    @Transactional
+    public void checkAddressSearchCount(LocalDate today) {
+        AddressSearchCount addressSearchCount = addressSearchCountRepository.findByCreatedAt(today)
+                .orElse(AddressSearchCount.init(LocalDate.now()));
+
+        long apiCallCount = addressSearchCount.getNaverCount();
+        if (apiCallCount >= 25000) // 일일 한도 25,000 건
+            throw new CommonException(ApiCountErrorCode.PLACE_API_CALL_LIMIT_EXCEEDED);
+
+        addressSearchCount.increase();
+        addressSearchCountRepository.save(addressSearchCount);
     }
 }
