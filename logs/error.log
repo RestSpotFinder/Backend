@@ -1,0 +1,24 @@
+2025-05-30T03:37:18.967+09:00 ERROR --- [ main] o.h.e.jdbc.spi.SqlExceptionHelper : ERROR: relation "address_search_count" does not exist
+  Position: 50
+2025-05-30T03:37:18.986+09:00 ERROR --- [ main] c.r.l.interceptor.LoggingInterceptor : Request Info:
+------------------------------
+TraceId       : 1aa3b07c-ab0b-486b-acba-fcb87a9113a1
+RequestUri    : /api/place/naver/address
+Method        : GET
+RequestParams : {address=정자동 178-1}
+RequestBody   : null
+PathVariables : null
+------------------------------
+
+2025-05-30T03:37:26.236+09:00 ERROR --- [ main] o.h.e.jdbc.spi.SqlExceptionHelper : ERROR: relation "address_search_count" does not exist
+  Position: 50
+2025-05-30T03:37:26.256+09:00 ERROR --- [ main] c.r.l.interceptor.LoggingInterceptor : Request Info:
+------------------------------
+TraceId       : ddfa3f89-8133-47d5-bd05-46f6e63c36aa
+RequestUri    : /api/place/naver/address
+Method        : GET
+RequestParams : {address=정자동 178-1}
+RequestBody   : null
+PathVariables : null
+------------------------------
+

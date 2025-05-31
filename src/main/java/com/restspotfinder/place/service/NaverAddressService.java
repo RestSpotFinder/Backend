@@ -21,7 +21,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class NaverAddressService {
-    private final HierarchicalBeanFactory hierarchicalBeanFactory;
     @Value("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=")
     String REQUEST_URL;
     @Value("${naver.cloud-platform.client-id}")
@@ -35,9 +34,6 @@ public class NaverAddressService {
     public List<NaverPlace> getPlaceListByAddress(String address) {
         String requestURL = REQUEST_URL + address;
         JsonNode jsonNode = connectCloud(requestURL);
-//        for (JsonNode node : jsonNode) {
-//            System.out.println("node = " + node);
-//        }
 
         List<NaverPlace> naverPlaceList = new ArrayList<>();
         JsonNode addressesNode = jsonNode.get("addresses");
@@ -51,7 +47,6 @@ public class NaverAddressService {
 
         return naverPlaceList;
 
-//        return NaverPlace.fromArray((ArrayNode) jsonNode.get("items"));
     }
 
     private NaverPlace fromAddressNode(JsonNode node) {

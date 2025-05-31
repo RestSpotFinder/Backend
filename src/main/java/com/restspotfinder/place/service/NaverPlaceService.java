@@ -23,7 +23,7 @@ public class NaverPlaceService {
     @Value("${naver.developers.search-url}")
     String SEARCH_URL;
     @Value("${naver.developers.client-id}")
-    String CLIENT_ID; // 장소 검색
+    String CLIENT_ID;
     @Value("${naver.developers.client-secret}")
     String CLIENT_SECRET;
 
