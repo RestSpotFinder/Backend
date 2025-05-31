@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+      ddl-auto: none
+    properties:
+      show_sql: true # 쿼리 출력 여부
+      format_sql: true # 쿼리 포맷팅 여부
+
+
+# API 인증 키
+naver:
+  cloud-platform:
+    geocode-url: https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode
+    direct5-url: https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving
+    client-id: a8lt0yd9uy
+    client-secret: P1WuQqH2d7rAnbWraxGwgDjPVvayuFwhV0RQAXtR
+  developers:
+    search-url: https://openapi.naver.com/v1/search/local.json
+    client-id: 5HoDae0VVltEaT50DyOl
+    client-secret: zmO1dgylJd
