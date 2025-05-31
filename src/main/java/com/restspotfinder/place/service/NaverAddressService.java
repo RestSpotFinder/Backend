@@ -18,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.restspotfinder.place.domain.NaverPlace.fromJsonNode;
+
 @Component
 @RequiredArgsConstructor
 public class NaverAddressService {
@@ -40,7 +42,7 @@ public class NaverAddressService {
 
         if (addressesNode != null && addressesNode.isArray()) {
             for (JsonNode addressNode : addressesNode) {
-                NaverPlace place = fromAddressNode(addressNode);
+                NaverPlace place = fromJsonNode(addressNode);
                 naverPlaceList.add(place);
             }
         }
