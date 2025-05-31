@@ -50,7 +50,7 @@ public class ApiCountService {
 
     @Transactional
     public void checkAddressSearchCount(LocalDate today) {
-        AddressSearchCount addressSearchCount = addressSearchCountRepository.findByDateWithPessimisticLock(today)
+        AddressSearchCount addressSearchCount = addressSearchCountRepository.findByCreatedAt(today)
                 .orElse(AddressSearchCount.init(LocalDate.now()));
 
         long apiCallCount = addressSearchCount.getNaverCount();
