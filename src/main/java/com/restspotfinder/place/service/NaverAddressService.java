@@ -2,10 +2,10 @@ package com.restspotfinder.place.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restspotfinder.apicount.service.ApiCountService;
 import com.restspotfinder.place.domain.NaverPlace;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.HierarchicalBeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +15,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import static com.restspotfinder.place.domain.NaverPlace.fromJsonNode;
 @Component
 @RequiredArgsConstructor
 public class NaverAddressService {
+    private final ApiCountService apiCountService;
     @Value("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=")
     String REQUEST_URL;
     @Value("${naver.cloud-platform.client-id}")
@@ -31,6 +33,10 @@ public class NaverAddressService {
     String CLOUD_CLIENT_SECRET;
 
     // 일일 허용량 25,000 건
+    public void checkAddressSearchCount() {
+        // 일일 한도 25,000 건
+        apiCountService.checkAddressSearchCount(LocalDate.now());
+    }
 
     @Transactional
     public List<NaverPlace> getPlaceListByAddress(String address) {
@@ -49,23 +55,6 @@ public class NaverAddressService {
 
         return naverPlaceList;
 
-    }
-
-    private NaverPlace fromAddressNode(JsonNode node) {
-        String title = node.has("roadAddress") && !node.get("roadAddress").asText().isEmpty()
-                ? node.get("roadAddress").asText() : node.get("jibunAddress").asText();
-
-        return NaverPlace.builder()
-                .title(title)  // 도로명 또는 지번 주소 (사용자 입력 값)
-                .mapX(node.get("x").asText())
-                .mapY(node.get("y").asText())
-                .category(null)
-                .address(node.get("jibunAddress").asText())  // 지번 주소
-                .roadAddress(node.get("roadAddress").asText())  // 도로명 주소
-                .link(null)
-                .description(null)
-                .telephone(null)
-                .build();
     }
 
     public JsonNode connectCloud(String requestURL) {
