@@ -35,9 +35,6 @@ public class PlaceController extends CommonController {
     @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class)))})
     @GetMapping("/naver")
     public ResponseEntity<?> getPlacesBySearchTerm(@RequestParam String searchTerm, @RequestParam(defaultValue = "false") boolean isTest) {
-        // 일일 한도 25,000 건
-        apiCountService.checkPlaceSearchCount(LocalDate.now());
-
         List<NaverPlace> naverPlaceList = naverPlaceSearchService.getPlaceListBySearchTerm(searchTerm);
         return SuccessReturn(PlaceResponse.fromList(naverPlaceList));
     }
