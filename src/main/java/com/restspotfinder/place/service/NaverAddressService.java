@@ -2,7 +2,6 @@ package com.restspotfinder.place.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.restspotfinder.apicount.service.ApiCountService;
 import com.restspotfinder.place.domain.NaverPlace;
 import jakarta.transaction.Transactional;
@@ -17,39 +16,54 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.restspotfinder.place.domain.NaverPlace.fromJsonNode;
 
 @Component
 @RequiredArgsConstructor
-public class NaverPlaceService {
+public class NaverAddressService {
     private final ApiCountService apiCountService;
-    @Value("${naver.developers.search-url}")
-    String SEARCH_URL;
-    @Value("${naver.developers.client-id}")
-    String CLIENT_ID;
-    @Value("${naver.developers.client-secret}")
-    String CLIENT_SECRET;
+    @Value("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=")
+    String REQUEST_URL;
+    @Value("${naver.cloud-platform.client-id}")
+    String CLOUD_CLIENT_ID;
+    @Value("${naver.cloud-platform.client-secret}")
+    String CLOUD_CLIENT_SECRET;
 
     // 일일 허용량 25,000 건
-    public void checkPlaceSearchCount() {
+    public void checkAddressSearchCount() {
         // 일일 한도 25,000 건
-        apiCountService.checkPlaceSearchCount(LocalDate.now());
+        apiCountService.checkAddressSearchCount(LocalDate.now());
     }
+
     @Transactional
-    public List<NaverPlace> getPlaceListBySearchTerm(String searchTerm) {
-        String requestURL = SEARCH_URL + "?display=5&query=" + searchTerm;
-        JsonNode jsonNode = connect(requestURL);
+    public List<NaverPlace> getPlaceListByAddress(String address) {
+        String requestURL = REQUEST_URL + address;
+        JsonNode jsonNode = connectCloud(requestURL);
 
-        return NaverPlace.fromArray((ArrayNode) jsonNode.get("items"));
+        List<NaverPlace> naverPlaceList = new ArrayList<>();
+        JsonNode addressesNode = jsonNode.get("addresses");
+
+        if (addressesNode != null && addressesNode.isArray()) {
+            for (JsonNode addressNode : addressesNode) {
+                NaverPlace place = fromJsonNode(addressNode);
+                naverPlaceList.add(place);
+            }
+        }
+
+        return naverPlaceList;
+
     }
 
-    public JsonNode connect(String requestURL) {
+    public JsonNode connectCloud(String requestURL) {
         try {
             HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
             RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Naver-Client-Id", CLIENT_ID);
-            headers.set("X-Naver-Client-Secret", CLIENT_SECRET);
+            headers.set("x-ncp-apigw-api-key-id", CLOUD_CLIENT_ID);
+            headers.set("x-ncp-apigw-api-key", CLOUD_CLIENT_SECRET);
 
             HttpEntity<Object> entity = new HttpEntity<>(headers);
             ResponseEntity<String> responseEntity = restTemplate.exchange(requestURL, HttpMethod.GET, entity, String.class);
@@ -61,3 +75,5 @@ public class NaverPlaceService {
         }
     }
 }
+
+
