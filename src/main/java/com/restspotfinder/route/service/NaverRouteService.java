@@ -43,14 +43,15 @@ public class NaverRouteService {
             HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
             RestTemplate restTemplate = new RestTemplate(httpRequestFactory);
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-NCP-APIGW-API-KEY-ID", CLIENT_ID);
-            headers.set("X-NCP-APIGW-API-KEY", CLIENT_SECRET);
+            headers.set("x-ncp-apigw-api-key-id", CLIENT_ID);
+            headers.set("x-ncp-apigw-api-key", CLIENT_SECRET);
 
             HttpEntity<Object> entity = new HttpEntity<>(headers);
             ResponseEntity<String> responseEntity = restTemplate.exchange(requestURL, HttpMethod.GET, entity, String.class);
 
             return new ObjectMapper().readTree(responseEntity.getBody());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException();
         }
     }
