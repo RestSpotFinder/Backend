@@ -25,7 +25,7 @@ import static com.restspotfinder.place.domain.NaverPlace.fromJsonNode;
 @RequiredArgsConstructor
 public class NaverAddressService {
     private final ApiCountService apiCountService;
-    @Value("https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=")
+    @Value("${naver.cloud-platform.geocode-url}")
     String REQUEST_URL;
     @Value("${naver.cloud-platform.client-id}")
     String CLOUD_CLIENT_ID;
@@ -40,7 +40,7 @@ public class NaverAddressService {
 
     @Transactional
     public List<NaverPlace> getPlaceListByAddress(String address) {
-        String requestURL = REQUEST_URL + address;
+        String requestURL = REQUEST_URL + "?query=" + address;
         JsonNode jsonNode = connectCloud(requestURL);
 
         List<NaverPlace> naverPlaceList = new ArrayList<>();
