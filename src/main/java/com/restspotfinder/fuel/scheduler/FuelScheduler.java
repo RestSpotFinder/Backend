@@ -13,7 +13,7 @@ public class FuelScheduler {
     private final FuelService fuelService;
 
     // 매일 자정에 실행
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 9 * * *", zone = "Asia/Seoul")
     public void updateFuelStationDaliy() {
         log.info("⛽ 연료 정보 스케줄러 실행 시작");
         fuelService.updateFuelStationsFromApi();
