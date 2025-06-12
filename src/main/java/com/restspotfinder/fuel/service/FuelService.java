@@ -4,6 +4,8 @@ import com.restspotfinder.fuel.domain.FuelStation;
 import com.restspotfinder.fuel.repository.FuelStationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +21,12 @@ public class FuelService {
         fuelStationRepository.saveAll(fetchedList);
     }
 
-    public Optional<FuelStation> findByServiceAreaName(String name) {
-        return fuelStationRepository.findByServiceAreaName(name);
-    }
-
-    public Optional<FuelStation> findById(String serviceAreaCode) {
-        return fuelStationRepository.findById(serviceAreaCode);
+    public FuelStation findByServiceAreaName(String name) {
+        return fuelStationRepository.findByServiceAreaName(name)
+                .orElseThrow(() -> new ResponseStatusException(
+                        NOT_FOUND,
+                        String.format("'%s' 이름의 주유소를 찾을 수 없습니다.", name)
+                ));
     }
 
     public List<FuelStation> getAllStations() {
