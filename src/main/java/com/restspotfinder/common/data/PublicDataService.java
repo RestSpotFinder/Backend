@@ -3,9 +3,9 @@ package com.restspotfinder.common.data;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.restspotfinder.interchange.domain.Interchange;
-import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.sleeparea.domain.SleepArea;
+import com.restspotfinder.domain.interchange.entity.Interchange;
+import com.restspotfinder.domain.restarea.entity.RestArea;
+import com.restspotfinder.domain.sleeparea.domain.SleepArea;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
