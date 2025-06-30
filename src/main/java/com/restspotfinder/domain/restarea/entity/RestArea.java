@@ -53,6 +53,16 @@ public class RestArea {
     private Integer weight; // 방향 판단 가중치
     private String naverMapUrl; // 매칭되는 네이버 맵 페이지 URL
 
+    private String mainImg; // 네이버맵 대표 이미지 src
+
+    public String getMainImg() {
+        return mainImg;
+    }
+
+    public void setMainImg(String mainImg) {
+        this.mainImg = mainImg;
+    }
+
     public boolean isAccessible(Direction routeDirectionFromRoute) {
         return routeDirectionFromRoute != null &&
                 (
