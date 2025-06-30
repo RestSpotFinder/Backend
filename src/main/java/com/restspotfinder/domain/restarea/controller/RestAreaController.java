@@ -1,6 +1,5 @@
 package com.restspotfinder.domain.restarea.controller;
 
-import com.restspotfinder.common.CommonController;
 import com.restspotfinder.domain.restarea.dto.RestAreaResponse;
 import com.restspotfinder.domain.restarea.service.RestAreaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/restarea")
-public class RestAreaController extends CommonController {
+public class RestAreaController {
     private final RestAreaService restAreaService;
 
     @Operation(summary = "단 건 휴게소 조회 API")
@@ -29,8 +28,8 @@ public class RestAreaController extends CommonController {
     @GetMapping
     public ResponseEntity<?> getOneByRestAreaId(@RequestParam long restAreaId) {
         RestAreaResponse response = restAreaService.getOneById(restAreaId);
-
-        return SuccessReturn(response);
+        
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "경로 별 접근 가능 휴게소 목록 조회 API")
@@ -39,7 +38,7 @@ public class RestAreaController extends CommonController {
     @GetMapping("/route")
     public ResponseEntity<?> getListByRouteId(@RequestParam long routeId) {
         List<RestAreaResponse> responses = restAreaService.getRestAreasWithPointCounts(routeId);
-
-        return SuccessReturn(responses);
+        
+        return ResponseEntity.ok(responses);
     }
 }

@@ -1,6 +1,5 @@
 package com.restspotfinder.domain.route.controller;
 
-import com.restspotfinder.common.CommonController;
 import com.restspotfinder.domain.route.collection.Routes;
 import com.restspotfinder.domain.route.controller.request.RouteRequestDTO;
 import com.restspotfinder.domain.route.dto.RouteResponse;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/route")
-public class RouteController extends CommonController {
+public class RouteController {
     private final RouteService routeService;
 
     @Operation(summary = "경로 검색 API", description = "경유지(waypoints)는 최대 5개까지 이며, 구분자로 %7c를 사용 한다. " +
@@ -33,15 +32,15 @@ public class RouteController extends CommonController {
     @GetMapping
     public ResponseEntity<?> getRouteByPoint(@ModelAttribute RouteRequestDTO routeRequestDTO) {
         Routes routes = routeService.create(routeRequestDTO);
-
-        return SuccessReturn(RouteResponse.fromRoutes(routes));
+        
+        return ResponseEntity.ok(RouteResponse.fromRoutes(routes));
     }
 
     @Operation(summary = "SearchId로 경로 검색 API")
     @GetMapping("/search")
     public ResponseEntity<?> getRouteById(@RequestParam long searchId) {
         Routes routes = routeService.getListBySearchId(searchId);
-
-        return SuccessReturn(RouteResponse.fromRoutes(routes));
+        
+        return ResponseEntity.ok(RouteResponse.fromRoutes(routes));
     }
 }

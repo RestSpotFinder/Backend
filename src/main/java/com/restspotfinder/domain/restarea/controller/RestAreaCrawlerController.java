@@ -1,9 +1,9 @@
-package com.restspotfinder.restarea.controller;
+package com.restspotfinder.domain.restarea.controller;
 
-import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.restarea.repository.RestAreaRepository;
+import com.restspotfinder.domain.restarea.entity.RestArea;
+import com.restspotfinder.domain.restarea.repository.RestAreaRepository;
+import com.restspotfinder.domain.restarea.service.RestAreaImageCrawlerService;
 import com.restspotfinder.restarea.response.CrawlResult;
-import com.restspotfinder.restarea.service.RestAreaImageCrawlerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

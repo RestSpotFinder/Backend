@@ -1,7 +1,7 @@
-package com.restspotfinder.restarea.service;
+package com.restspotfinder.domain.restarea.service;
 
-import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.restarea.repository.RestAreaRepository;
+import com.restspotfinder.domain.restarea.entity.RestArea;
+import com.restspotfinder.domain.restarea.repository.RestAreaRepository;
 import com.restspotfinder.restarea.response.CrawlResult;
 import jakarta.annotation.PreDestroy;
 import jakarta.transaction.Transactional;
