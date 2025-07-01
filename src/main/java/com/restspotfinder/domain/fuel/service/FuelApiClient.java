@@ -44,18 +44,7 @@ public class FuelApiClient {
 
                 if (list.isArray() && list.size() > 0) {
                     for (JsonNode node : list) {
-                        FuelStation station = new FuelStation(
-                                node.path("serviceAreaCode").asText(),
-                                node.path("serviceAreaName").asText(),
-                                node.path("routeName").asText(),
-                                node.path("direction").asText(),
-                                node.path("gasolinePrice").asText(),
-                                node.path("diselPrice").asText(),
-                                node.path("lpgPrice").asText(),
-                                node.path("oilCompany").asText(),
-                                node.path("telNo").asText(),
-                                node.path("svarAddr").asText()
-                        );
+                        FuelStation station = FuelStation.from(node);
                         result.add(station);
                     }
                     pageNo++;

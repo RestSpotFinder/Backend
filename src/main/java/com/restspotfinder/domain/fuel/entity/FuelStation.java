@@ -4,10 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class FuelStation {
 
     @Id
@@ -23,18 +28,18 @@ public class FuelStation {
     private String telNo; // 전화번호
     private String svarAddr; // 휴게소주소
 
-    public FuelStation(String serviceAreaCode, String serviceAreaName, String routeName, String direction,
-                       String gasolinePrice, String diselPrice, String lpgPrice,
-                       String oilCompany, String telNo, String svarAddr) {
-        this.serviceAreaCode = serviceAreaCode;
-        this.serviceAreaName = serviceAreaName;
-        this.routeName = routeName;
-        this.direction = direction;
-        this.gasolinePrice = gasolinePrice;
-        this.diselPrice = diselPrice;
-        this.lpgPrice = lpgPrice;
-        this.oilCompany = oilCompany;
-        this.telNo = telNo;
-        this.svarAddr = svarAddr;
+    public static FuelStation from(JsonNode node) {
+        return FuelStation.builder()
+                .serviceAreaCode(node.path("serviceAreaCode").asText())
+                .serviceAreaName(node.path("serviceAreaName").asText())
+                .routeName(node.path("routeName").asText())
+                .direction(node.path("direction").asText())
+                .gasolinePrice(node.path("gasolinePrice").asText())
+                .diselPrice(node.path("diselPrice").asText())
+                .lpgPrice(node.path("lpgPrice").asText())
+                .oilCompany(node.path("oilCompany").asText())
+                .telNo(node.path("telNo").asText())
+                .svarAddr(node.path("svarAddr").asText())
+                .build();
     }
 }
