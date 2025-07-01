@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.restarea.error.RestAreaErrorCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,10 +60,10 @@ public class RestAreaCrawlerController {
     public ResponseEntity<Map<String, Object>> crawlSingleRestArea(@PathVariable Long restAreaId) {
         try {
             RestArea restArea = restAreaRepository.findById(restAreaId)
-                    .orElseThrow(() -> new RuntimeException("휴게소를 찾을 수 없습니다."));
+                    .orElseThrow(() -> new BusinessException(RestAreaErrorCode.NOT_FOUND));
 
             if (restArea.getNaverMapUrl() == null) {
-                throw new RuntimeException("네이버 지도 URL이 없습니다.");
+                throw new BusinessException(RestAreaErrorCode.NAVER_MAP_URL_NOT_FOUND);
             }
 
             String imageUrl = crawlerService.crawlImageFromNaverMap(restArea.getNaverMapUrl());

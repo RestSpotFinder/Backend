@@ -4,10 +4,10 @@ import com.restspotfinder.domain.apicount.entity.AddressSearchCount;
 import com.restspotfinder.domain.apicount.entity.PlaceSearchCount;
 import com.restspotfinder.domain.apicount.entity.RouteSearchCount;
 import com.restspotfinder.domain.apicount.error.ApiCountErrorCode;
+import com.restspotfinder.exception.BusinessException;
 import com.restspotfinder.domain.apicount.repository.AddressSearchCountRepository;
 import com.restspotfinder.domain.apicount.repository.PlaceSearchCountRepository;
 import com.restspotfinder.domain.apicount.repository.RouteSearchCountRepository;
-import com.restspotfinder.common.exception.CommonException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class ApiCountService {
 
         long apiCallCount = placeSearchCount.getNaverCount();
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
-            throw new CommonException(ApiCountErrorCode.PLACE_API_CALL_LIMIT_EXCEEDED);
+            throw new BusinessException(ApiCountErrorCode.PLACE_API_CALL_LIMIT_EXCEEDED);
 
         placeSearchCount.increase();
         placeSearchCountRepository.save(placeSearchCount);
@@ -42,7 +42,7 @@ public class ApiCountService {
 
         long apiCallCount = routeSearchCount.getNaverCount();
         if (apiCallCount >= 60000) // 월간 한도 60,000 건
-            throw new CommonException(ApiCountErrorCode.ROUTE_API_CALL_LIMIT_EXCEEDED);
+            throw new BusinessException(ApiCountErrorCode.ROUTE_API_CALL_LIMIT_EXCEEDED);
 
         routeSearchCount.increase();
         routeSearchCountRepository.save(routeSearchCount);
@@ -55,7 +55,7 @@ public class ApiCountService {
 
         long apiCallCount = addressSearchCount.getNaverCount();
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
-            throw new CommonException(ApiCountErrorCode.PLACE_API_CALL_LIMIT_EXCEEDED);
+            throw new BusinessException(ApiCountErrorCode.PLACE_API_CALL_LIMIT_EXCEEDED);
 
         addressSearchCount.increase();
         addressSearchCountRepository.save(addressSearchCount);

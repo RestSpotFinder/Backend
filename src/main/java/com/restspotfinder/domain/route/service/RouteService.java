@@ -11,6 +11,8 @@ import com.restspotfinder.domain.search.repository.SearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.route.error.RouteErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,12 +42,16 @@ public class RouteService {
     @Transactional
     public Route getOneById(long routeId){
         return routeRepository.findById(routeId)
-                .orElseThrow(() -> new NullPointerException("[Route] routeId : " + routeId));
+                .orElseThrow(() -> new BusinessException(RouteErrorCode.NOT_FOUND));
     }
 
     @Transactional
     public Routes getListBySearchId(long searchId) {
         List<Route> routeList = routeRepository.findBySearchId(searchId);
+
+        if (routeList == null || routeList.isEmpty()) {
+            throw new BusinessException(RouteErrorCode.INVALID_ROUTE_LIST);
+        }
         Routes routes = new Routes(routeList);
 
         Search search = Search.fromRoutes(routes);

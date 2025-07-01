@@ -12,6 +12,9 @@ import com.restspotfinder.domain.route.enums.Direction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.restarea.error.RestAreaErrorCode;
+import com.restspotfinder.domain.route.error.RouteErrorCode;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +35,7 @@ public class RestAreaServiceImpl implements RestAreaService {
     @Override
     public RestAreaResponse getOneById(long restAreaId) {
         RestArea restArea = restAreaRepository.findById(restAreaId)
-                .orElseThrow(() -> new NullPointerException("[RestArea] restAreaId : " + restAreaId));
+                .orElseThrow(() -> new BusinessException(RestAreaErrorCode.NOT_FOUND));
 
         return RestAreaResponse.from(restArea);
     }
@@ -40,7 +43,7 @@ public class RestAreaServiceImpl implements RestAreaService {
     @Override
     public List<RestAreaResponse> getRestAreasWithPointCounts(long routeId) {
         Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new NullPointerException("[Route] routeId : " + routeId));
+                .orElseThrow(() -> new BusinessException(RouteErrorCode.NOT_FOUND));
 
         // 1. 먼저 접근 가능한 휴게소 목록을 가져옴
         RestAreas accessibleRestAreas = getAccessibleRestAreas(route);

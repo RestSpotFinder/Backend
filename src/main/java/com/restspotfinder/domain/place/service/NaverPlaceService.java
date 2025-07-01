@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.place.error.PlaceErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -56,8 +58,7 @@ public class NaverPlaceService {
 
             return new ObjectMapper().readTree(responseEntity.getBody());
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+            throw new BusinessException(PlaceErrorCode.EXTERNAL_API_ERROR);
         }
     }
 }

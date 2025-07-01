@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.restspotfinder.domain.restarea.entity.RestArea;
 import org.springframework.core.io.ClassPathResource;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.restarea.error.RestAreaErrorCode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class RestAreaDataConverter {
 
             System.out.println("restAreaList = " + restAreaList.size());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to convert JSON to RestArea entities: " + e.getMessage(), e);
+            throw new BusinessException(RestAreaErrorCode.JSON_CONVERT_ERROR);
         }
         
         return restAreaList;

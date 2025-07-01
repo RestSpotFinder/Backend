@@ -8,6 +8,8 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
+import com.restspotfinder.exception.BusinessException;
+import com.restspotfinder.domain.fuel.error.FuelErrorCode;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +24,7 @@ public class FuelService {
 
     public FuelStation findByServiceAreaName(String name) {
         return fuelStationRepository.findByServiceAreaName(name)
-                .orElseThrow(() -> new ResponseStatusException(
-                        NOT_FOUND,
-                        String.format("'%s' 이름의 주유소를 찾을 수 없습니다.", name)
-                ));
+                .orElseThrow(() -> new BusinessException(FuelErrorCode.NOT_FOUND));
     }
 
     public List<FuelStation> getAllStations() {
