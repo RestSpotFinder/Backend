@@ -74,7 +74,7 @@ public class RestAreaServiceImpl implements RestAreaService {
     }
 
     private RestAreas getAccessibleRestAreas(Route route) {
-        List<RestArea> restAreaList = restAreaRepository.findNearbyRoutes(route.getLineString(), 300);
+        List<RestArea> restAreaList = restAreaRepository.findNearbyRoutes(route.getLineString(), 500);
         RestAreas restAreas = new RestAreas(restAreaList);
 
         Set<String> routeNameSet = restAreas.extractRouteNames();
