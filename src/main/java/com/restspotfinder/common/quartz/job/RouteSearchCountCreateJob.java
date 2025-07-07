@@ -1,7 +1,7 @@
 package com.restspotfinder.common.quartz.job;
 
-import com.restspotfinder.apicount.domain.RouteSearchCount;
-import com.restspotfinder.apicount.repository.RouteSearchCountRepository;
+import com.restspotfinder.domain.apicount.entity.RouteSearchCount;
+import com.restspotfinder.domain.apicount.repository.RouteSearchCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;

@@ -1,10 +1,11 @@
 package com.restspotfinder.interchange.repository;
 
-import com.restspotfinder.interchange.domain.Interchange;
-import com.restspotfinder.place.domain.NaverPlace;
-import com.restspotfinder.place.service.NaverPlaceService;
-import com.restspotfinder.restarea.domain.RestArea;
-import com.restspotfinder.restarea.repository.RestAreaRepository;
+import com.restspotfinder.domain.interchange.entity.Interchange;
+import com.restspotfinder.domain.interchange.repository.InterchangeRepository;
+import com.restspotfinder.domain.place.entity.NaverPlace;
+import com.restspotfinder.domain.place.service.NaverPlaceService;
+import com.restspotfinder.domain.restarea.entity.RestArea;
+import com.restspotfinder.domain.restarea.repository.RestAreaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
