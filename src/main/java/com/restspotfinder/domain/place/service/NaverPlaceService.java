@@ -32,13 +32,10 @@ public class NaverPlaceService {
     @Value("${naver.developers.client-secret}")
     String CLIENT_SECRET;
 
-    // 일일 허용량 25,000 건
-    public void checkPlaceSearchCount() {
-        // 일일 한도 25,000 건
-        apiCountService.checkPlaceSearchCount(LocalDate.now());
-    }
     @Transactional
     public List<NaverPlace> getPlaceListBySearchTerm(String searchTerm) {
+        apiCountService.checkPlaceSearchCount(LocalDate.now());
+        
         String requestURL = SEARCH_URL + "?display=5&query=" + searchTerm;
         JsonNode jsonNode = connect(requestURL);
 

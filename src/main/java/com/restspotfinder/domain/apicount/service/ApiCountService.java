@@ -24,7 +24,7 @@ public class ApiCountService {
     @Transactional
     public void checkPlaceSearchCount(LocalDate today) {
         PlaceSearchCount placeSearchCount = placeSearchCountRepository.findByDateWithPessimisticLock(today)
-                .orElse(PlaceSearchCount.init(LocalDate.now()));
+                .orElse(PlaceSearchCount.init(today));
 
         long apiCallCount = placeSearchCount.getNaverCount();
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
@@ -51,7 +51,7 @@ public class ApiCountService {
     @Transactional
     public void checkAddressSearchCount(LocalDate today) {
         AddressSearchCount addressSearchCount = addressSearchCountRepository.findByCreatedAt(today)
-                .orElse(AddressSearchCount.init(LocalDate.now()));
+                .orElse(AddressSearchCount.init(today));
 
         long apiCallCount = addressSearchCount.getNaverCount();
         if (apiCallCount >= 25000) // 일일 한도 25,000 건
