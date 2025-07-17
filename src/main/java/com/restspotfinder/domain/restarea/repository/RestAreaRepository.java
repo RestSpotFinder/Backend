@@ -8,9 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RestAreaRepository extends JpaRepository<RestArea, Long> {
     List<RestArea> findByRouteName(String routeName);
+    
+    @Query("SELECT r FROM RestArea r LEFT JOIN FETCH r.fuelStation WHERE r.restAreaId = :restAreaId")
+    Optional<RestArea> findByIdWithFuelStation(@Param("restAreaId") Long restAreaId);
 
     /***
      * 경로 LineString <-> 휴게소 좌표 비교 (500m 이내에 있는지 체크)

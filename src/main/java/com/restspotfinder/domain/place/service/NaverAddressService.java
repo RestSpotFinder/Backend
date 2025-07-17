@@ -34,14 +34,11 @@ public class NaverAddressService {
     @Value("${naver.cloud-platform.client-secret}")
     String CLOUD_CLIENT_SECRET;
 
-    // 일일 허용량 25,000 건
-    public void checkAddressSearchCount() {
-        // 일일 한도 25,000 건
-        apiCountService.checkAddressSearchCount(LocalDate.now());
-    }
 
     @Transactional
     public List<NaverPlace> getPlaceListByAddress(String address) {
+        apiCountService.checkAddressSearchCount(LocalDate.now());
+        
         String requestURL = REQUEST_URL + "?query=" + address;
         JsonNode jsonNode = connectCloud(requestURL);
 

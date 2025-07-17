@@ -3,6 +3,7 @@ package com.restspotfinder.domain.restarea.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.restspotfinder.domain.route.enums.Direction;
+import com.restspotfinder.domain.fuel.entity.FuelStation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Coordinate;
@@ -54,14 +55,10 @@ public class RestArea {
     private String naverMapUrl; // 매칭되는 네이버 맵 페이지 URL
 
     private String mainImg; // 네이버맵 대표 이미지 src
-
-    public String getMainImg() {
-        return mainImg;
-    }
-
-    public void setMainImg(String mainImg) {
-        this.mainImg = mainImg;
-    }
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fuelId", referencedColumnName = "serviceAreaCode", insertable = false, updatable = false)
+    private FuelStation fuelStation;
 
     public boolean isAccessible(Direction routeDirectionFromRoute) {
         return routeDirectionFromRoute != null &&
