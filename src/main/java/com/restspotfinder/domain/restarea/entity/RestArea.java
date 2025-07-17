@@ -60,7 +60,6 @@ public class RestArea {
     @JoinColumn(name = "fuelId", referencedColumnName = "serviceAreaCode", insertable = false, updatable = false)
     private FuelStation fuelStation;
 
-
     public boolean isAccessible(Direction routeDirectionFromRoute) {
         return routeDirectionFromRoute != null &&
                 (

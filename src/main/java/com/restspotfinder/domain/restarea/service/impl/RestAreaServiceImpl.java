@@ -1,5 +1,7 @@
 package com.restspotfinder.domain.restarea.service.impl;
 
+import com.restspotfinder.domain.fuel.entity.FuelUpdateHistory;
+import com.restspotfinder.domain.fuel.error.FuelErrorCode;
 import com.restspotfinder.domain.interchange.service.InterchangeService;
 import com.restspotfinder.domain.restarea.collection.RestAreas;
 import com.restspotfinder.domain.restarea.entity.RestArea;
@@ -7,6 +9,7 @@ import com.restspotfinder.domain.restarea.repository.RestAreaRepository;
 import com.restspotfinder.domain.restarea.dto.RestAreaResponse;
 import com.restspotfinder.domain.restarea.dto.RestAreaDetailResponse;
 import com.restspotfinder.domain.restarea.service.RestAreaService;
+import com.restspotfinder.domain.fuel.repository.FuelUpdateHistoryRepository;
 import com.restspotfinder.domain.route.entity.Route;
 import com.restspotfinder.domain.route.repository.RouteRepository;
 import com.restspotfinder.domain.route.enums.Direction;
@@ -30,6 +33,7 @@ import java.util.stream.IntStream;
 public class RestAreaServiceImpl implements RestAreaService {
     private final RestAreaRepository restAreaRepository;
     private final RouteRepository routeRepository;
+    private final FuelUpdateHistoryRepository fuelUpdateHistoryRepository;
 
     private final InterchangeService interchangeService;
 
@@ -38,7 +42,10 @@ public class RestAreaServiceImpl implements RestAreaService {
         RestArea restArea = restAreaRepository.findByIdWithFuelStation(restAreaId)
                 .orElseThrow(() -> new BusinessException(RestAreaErrorCode.NOT_FOUND));
 
-        return RestAreaDetailResponse.from(restArea);
+        FuelUpdateHistory fuelUpdateHistory = fuelUpdateHistoryRepository.findFirstByIsSuccessTrueOrderByUpdateStartedAtDesc()
+                .orElseThrow(() -> new BusinessException(FuelErrorCode.NOT_FOUND));
+
+        return RestAreaDetailResponse.of(restArea, fuelUpdateHistory.getUpdateStartedAt());
     }
 
     @Override
